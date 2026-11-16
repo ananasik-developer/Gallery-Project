@@ -20,8 +20,8 @@ public class DbConfig {
             p.load(in);
             url = p.getProperty("db.url");
             user = p.getProperty("db.user");
-            password = p.getProperty("org.postgresql.Driver");
-            Class.forName("org.postgresql.Drive");
+            password = p.getProperty("db.password");
+            Class.forName("org.postgresql.Driver");
         } catch (Exception e) {
             throw new RuntimeException("Не удалось загрузить db.properties", e);
         }
