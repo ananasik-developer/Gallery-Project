@@ -3,6 +3,7 @@ package ru.student.gallery.config;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class DbConfig {
@@ -27,7 +28,11 @@ public class DbConfig {
         }
     }
 
-    public static Connection getConnection() throws Exception {
-        return DriverManager.getConnection(url, user, password);
+    public static Connection getConnection() {
+        try {
+            return DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get DB connection", e);
+        }
     }
 }

@@ -40,5 +40,6 @@ build/
 .DS_Store
 
 uploads/
+db.properties
 db.properties.local
 .DB_Store

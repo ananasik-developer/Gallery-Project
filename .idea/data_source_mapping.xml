@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/ru/student/gallery/dao/impl/JdbcUserDao.java" value="aa8ce3eb-0e27-4ccf-b48e-93ee12ad6668" />
+  </component>
+</project>

@@ -1,6 +1,5 @@
 package ru.student.gallery.util;
 
-import org.eclipse.tags.shaded.org.apache.bcel.generic.ARETURN;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordHasher {
@@ -15,5 +14,15 @@ public class PasswordHasher {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public static void main(String[] args) {
+        String password = "123456";
+
+        String hash = hash(password);
+        System.out.println(hash);
+
+        boolean ok = matches(password, hash);
+        System.out.println("Проверка совпадения: " + ok);
     }
 }

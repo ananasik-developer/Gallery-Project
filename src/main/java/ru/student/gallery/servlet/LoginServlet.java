@@ -19,8 +19,15 @@ public class LoginServlet extends HttpServlet {
     private UserService userService;
 
     @Override
-    public void init() {
-        userService = (UserService) getServletContext().getAttribute("userService");
+    public void init() throws ServletException {
+        var registry = (ru.student.gallery.config.ServiceRegistry)
+                getServletContext().getAttribute("serviceRegistry");
+
+        if (registry == null) {
+            throw new ServletException("ServiceRegistry не найден! Проверь AppContextListener.");
+        }
+
+        this.userService = registry.getService("userService", UserService.class);
     }
 
     @Override
@@ -36,10 +43,17 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         Optional<User> user = userService.authenticate(username, password);
+//        if (user.isEmpty()) {
+//            req.setAttribute("error", "Неверный логин или пароль");
+//            req.setAttribute("username", username);
+//            req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+//            return;
+//        }
+
         if (user.isEmpty()) {
-            req.setAttribute("error", "Неверный логин или пароль");
-            req.setAttribute("username", username);
-            req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+            resp.setContentType("text/plain;charset=UTF-8");
+            resp.setStatus(401);
+            resp.getWriter().write("Неверный логин или пароль");
             return;
         }
 
