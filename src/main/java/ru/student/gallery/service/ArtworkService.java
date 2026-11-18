@@ -15,7 +15,7 @@ public class ArtworkService {
         this.artworkDao = artworkDao;
     }
 
-    public List<Artwork> getFeed(User currentUser, int limit) {
+    public List<Artwork> getFeed(SessionUser currentUser, int limit) {
         return artworkDao.findPublished(limit, 0);
     }
 
@@ -40,6 +40,17 @@ public class ArtworkService {
 
         art.setStatus("PUBLISHED");
         artworkDao.update(art);
+    }
+
+    public Artwork getArtworkById(long id, SessionUser currentUser) {
+        Artwork art = artworkDao.findById(id)
+                .orElseThrow(() -> new RuntimeException("Работа не найдена"));
+
+        if ("DRAFT".equals(art.getStatus()) && !art.getAuthorId().equals(currentUser.getId())) {
+            throw new RuntimeException("Нет прав на просмотр чужого черновика");
+        }
+
+        return art;
     }
 
     public List<Artwork> getUserGallery(long userId) {

@@ -38,43 +38,8 @@ public class ArtworkCreateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        SessionUser currentUser = (SessionUser) session.getAttribute("currentUser");
-
-        if (currentUser == null) {
-            resp.getWriter().write("<h3>ошибка входа</h3>");
-            return;
-        }
-
-        try {
-            Artwork testArt = new Artwork();
-            testArt.setTitle("тестикс " + System.currentTimeMillis());
-            testArt.setDescription("лялялляля");
-            testArt.setImagePath("/uploads/test_" + System.currentTimeMillis() + ".jpg");
-
-            artworkService.createArtwork(testArt, currentUser);
-
-            resp.setContentType("text/plain;charset=UTF-8");
-            resp.getWriter().write("ЛЕТСГОУ\n" +
-                    "id работы: " + testArt.getId() + "\n" +
-                    "название: " + testArt.getTitle() + "\n" +
-                    "статус: " + testArt.getStatus() + "\n" +
-                    "автор: " + testArt.getAuthorId());
-
-        } catch (Exception e) {
-            resp.setContentType("text/plain;charset=UTF-8");
-            resp.setStatus(500);
-            resp.getWriter().write("ЭКСПШН " + e.getMessage());
-            e.printStackTrace(); // Посмотри стектрейс в консоли сервера
-        }
+        req.getRequestDispatcher("/WEB-INF/jsp/artwork-create.jsp").forward(req, resp);
     }
-
-
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-//            throws ServletException, IOException {
-//        req.getRequestDispatcher("/WEB-INF/jsp/artwork-create.jsp").forward(req, resp);
-//    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)

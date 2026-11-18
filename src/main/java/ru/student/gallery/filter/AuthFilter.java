@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.model.User;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class AuthFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
 
         HttpSession session = request.getSession(false);
-        User user = session == null ? null : (User) session.getAttribute("currentUser");
+        SessionUser user = session == null ? null : (SessionUser) session.getAttribute("currentUser");
 
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");

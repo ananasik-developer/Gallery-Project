@@ -15,8 +15,15 @@ public class RegisterServlet extends HttpServlet {
     private UserService userService;
 
     @Override
-    public void init() {
-        userService = (UserService) getServletContext().getAttribute("userService");
+    public void init() throws ServletException {
+        var registry = (ru.student.gallery.config.ServiceRegistry)
+                getServletContext().getAttribute("serviceRegistry");
+
+        if (registry == null) {
+            throw new ServletException("ServiceRegistry не найден!");
+        }
+
+        this.userService = registry.getService("userService", UserService.class);
     }
 
     @Override
