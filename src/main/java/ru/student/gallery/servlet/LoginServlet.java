@@ -43,17 +43,11 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         Optional<User> user = userService.authenticate(username, password);
-//        if (user.isEmpty()) {
-//            req.setAttribute("error", "Неверный логин или пароль");
-//            req.setAttribute("username", username);
-//            req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
-//            return;
-//        }
 
         if (user.isEmpty()) {
-            resp.setContentType("text/plain;charset=UTF-8");
-            resp.setStatus(401);
-            resp.getWriter().write("Неверный логин или пароль");
+            req.setAttribute("error", "Неверный логин или пароль");
+            req.setAttribute("username", username);
+            req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
             return;
         }
 

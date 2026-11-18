@@ -68,7 +68,10 @@ public class JdbcArtworkDao implements ArtworkDao {
 
     @Override
     public List<Artwork> findByAuthorId(long authorId) {
-        String sql = "SELECT * FROM artworks WHERE author_id = ? ORDER BY created_at DESC";
+        String sql = "SELECT a.*, u.username as author_username FROM artworks a " +
+                "JOIN users u ON a.author_id = u.id " +
+                "WHERE a.author_id = ? ORDER BY a.created_at DESC";
+
         List<Artwork> list = new ArrayList<>();
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

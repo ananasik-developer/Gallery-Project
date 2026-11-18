@@ -12,7 +12,7 @@
     <p><strong>Автор:</strong> ${artwork.authorUsername}</p>
     <p><strong>Статус:</strong>
         <c:choose>
-            <c:when test="${artwork.status == 'DRAFT'}">📝 Черновик</c:when>
+            <c:when test="${artwork.status == 'DRAFT'}">Черновик</c:when>
             <c:otherwise>Опубликовано</c:otherwise>
         </c:choose>
     </p>

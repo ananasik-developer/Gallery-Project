@@ -28,7 +28,11 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        SessionUser currentUser = (SessionUser) session.getAttribute("currentUser");
+        SessionUser currentUser = null;
+
+        if (session != null) {
+            currentUser = (SessionUser) session.getAttribute("currentUser");
+        }
 
         List<Artwork> feed = artworkService.getFeed(currentUser, 20);
         req.setAttribute("feed", feed);
