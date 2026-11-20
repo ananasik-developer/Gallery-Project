@@ -1,31 +1,28 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Новая галерея</title>
-</head>
-<body>
-    <h2>Создание галереи</h2>
+<c:set var="pageTitle" value="Новая галерея"/>
+<%@ include file="/WEB-INF/jsp/fragments/header.jsp" %>
 
-    <c:if test="${not empty error}">
-        <p style="color: red;"><c:out value="${error}"/></p>
-    </c:if>
+<div class="page">
+    <main class="content">
+        <h1>Новая галерея</h1>
+        <p class="subtitle">Галерея собирает ваши работы в одну подборку по теме.</p>
 
-    <form method="post" action="<c:url value='/gallery/create'/>">
-        <label>Название:<br>
-            <input type="text" name="title"
-                   value="<c:out value='${title}'/>" required maxlength="500">
-        </label>
-        <br><br>
-        <label>Описание:<br>
-            <textarea name="description" rows="4" cols="50"><c:out value="${description}"/></textarea>
-        </label>
-        <br><br>
+        <c:if test="${not empty error}">
+            <p class="notice error"><c:out value="${error}"/></p>
+        </c:if>
 
-        <button type="submit">Создать галерею</button>
-        <a href="<c:url value='/'/>">Отмена</a>
-    </form>
-</body>
-</html>
+        <form class="form" method="post" action="<c:url value='/gallery/create'/>">
+            <label>Название
+                <input type="text" name="title" value="<c:out value='${title}'/>" required maxlength="500">
+            </label>
+            <label>Описание
+                <textarea name="description" rows="5"><c:out value="${description}"/></textarea>
+            </label>
+            <button type="submit">Создать галерею</button>
+            <a class="cancel" href="<c:url value='/'/>">Отмена</a>
+        </form>
+    </main>
+</div>
+
+<%@ include file="/WEB-INF/jsp/fragments/footer.jsp" %>

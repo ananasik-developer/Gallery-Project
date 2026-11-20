@@ -1,72 +1,47 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Галерея</title>
-    <style>
-        .feed-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .artwork-card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .artwork-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-        }
-        .artwork-card h3 {
-            margin: 10px 0 5px;
-            font-size: 16px;
-        }
-        .artwork-card p {
-            margin: 0;
-            color: #666;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Добро пожаловать в галерею!</h1>
+<c:set var="pageTitle" value="Главная"/>
+<%@ include file="/WEB-INF/jsp/fragments/header.jsp" %>
 
-    <c:choose>
-        <c:when test="${not empty currentUser}">
-            <p>Вы вошли как: <strong><c:out value="${currentUser.username}"/></strong></p>
-            <a href="<c:url value='/artwork/create'/>">Создать новую работу</a>
-            <a href="<c:url value='/gallery/create'/>">Создать галерею</a>|
-            <a href="<c:url value='/logout'/>">Выйти</a>
-        </c:when>
-        <c:otherwise>
-            <p>Вы не авторизованы.</p>
-            <a href="<c:url value='/login'/>">Войти</a> |
-            <a href="<c:url value='/register'/>">Регистрация</a>
-        </c:otherwise>
-    </c:choose>
+<div class="page">
+    <aside class="sidebar">
+        <h2>Tags</h2>
+        <p class="empty-note">Пока нет тегов</p>
+    </aside>
 
-    <h2>Последние публикации</h2>
-
-    <c:if test="${empty feed}">
-        <p>Пока нет опубликованных работ.</p>
-    </c:if>
-
-    <div class="feed-grid">
-        <c:forEach var="art" items="${feed}">
-            <div class="artwork-card">
-                <a href="<c:url value='/artwork/${art.id}'/>">
-                    <img src="<c:url value='${art.imagePath}'/>" alt="<c:out value='${art.title}'/>">
-                    <h3><c:out value="${art.title}"/></h3>
-                    <p>Автор: <c:out value="${art.authorUsername}"/></p>
-                </a>
+    <main class="content">
+        <form class="search" method="get" action="<c:url value='/'/>">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2">
+                    <circle cx="10" cy="10" r="7"/>
+                    <line x1="15" y1="15" x2="21" y2="21"/>
+                </svg>
+                <input type="text" name="q" value="<c:out value='${param.q}'/>" placeholder="поиск">
             </div>
-        </c:forEach>
-    </div>
-</body>
-</html>
+            <button type="submit">поиск</button>
+        </form>
+
+        <c:if test="${not empty searchQuery}">
+            <p class="search-note">Результаты по запросу «<c:out value="${searchQuery}"/>»</p>
+        </c:if>
+
+        <c:if test="${empty feed}">
+            <p class="empty-note">Пока нет опубликованных работ.</p>
+        </c:if>
+
+        <div class="artwork-grid">
+            <c:forEach var="art" items="${feed}">
+                <a class="artwork-card" href="<c:url value='/artwork/${art.id}'/>">
+                    <img src="<c:url value='${art.imagePath}'/>" alt="<c:out value='${art.title}'/>">
+                </a>
+            </c:forEach>
+        </div>
+    </main>
+
+    <aside class="aside">
+        <h2>Compilation</h2>
+        <p class="empty-note">Пока нет работ</p>
+    </aside>
+</div>
+
+<%@ include file="/WEB-INF/jsp/fragments/footer.jsp" %>

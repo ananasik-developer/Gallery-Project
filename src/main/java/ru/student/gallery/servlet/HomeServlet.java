@@ -14,7 +14,7 @@ import ru.student.gallery.service.ArtworkService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/")
+@WebServlet("")
 public class HomeServlet extends HttpServlet {
     private ArtworkService artworkService;
 
@@ -28,13 +28,21 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        SessionUser currentUser = null;
+        SessionUser currentUser = session == null
+                ? null
+                : (SessionUser) session.getAttribute("currentUser");
 
-        if (session != null) {
-            currentUser = (SessionUser) session.getAttribute("currentUser");
+        String query = req.getParameter("q");
+        List<Artwork> feed;
+
+        if (query != null && !query.trim().isEmpty()) {
+            query = query.trim();
+            feed = artworkService.search(query);
+            req.setAttribute("searchQuery", query);
+        } else {
+            feed = artworkService.getFeed(currentUser, 20);
         }
 
-        List<Artwork> feed = artworkService.getFeed(currentUser, 20);
         req.setAttribute("feed", feed);
         req.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
     }

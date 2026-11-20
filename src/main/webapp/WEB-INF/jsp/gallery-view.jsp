@@ -1,63 +1,42 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title><c:out value="${gallery.title}"/></title>
-    <style>
-        body { font-family: sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .gallery-header { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-        .gallery-meta { color: #666; font-size: 14px; margin-top: 5px; }
-        .artworks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        .artwork-thumb img {
-            width: 100%; height: 150px; object-fit: cover;
-            border-radius: 4px; display: block;
-        }
-        .artwork-thumb { text-decoration: none; color: inherit; }
-        .artwork-thumb p { margin: 5px 0 0; font-size: 13px; text-align: center; }
-        .empty-gallery { color: #666; font-style: italic; padding: 40px; text-align: center; border: 2px dashed #ddd; border-radius: 8px; }
-    </style>
-</head>
-<body>
-    <div class="gallery-header">
+<c:set var="pageTitle" value="${gallery.title}"/>
+<%@ include file="/WEB-INF/jsp/fragments/header.jsp" %>
+
+<div class="page">
+    <main class="content">
         <h1><c:out value="${gallery.title}"/></h1>
-        <p><c:out value="${gallery.description}"/></p>
-        <div class="gallery-meta">
-            Автор: <c:out value="${gallery.authorUsername}"/> |
-            Работ: ${artworks.size()}
-        </div>
+        <p class="subtitle">
+            Автор: <c:out value="${gallery.authorUsername}"/>
+            |
+            работ: ${artworks.size()}
+        </p>
+
+        <p class="artwork-description"><c:out value="${gallery.description}"/></p>
+
         <c:if test="${isOwner}">
-            <br>
-            <c:if test="${not empty gallery.id}">
-                <a href="<c:url value='/gallery-manage/add-artwork?galleryId=${gallery.id}'/>">Добавить работу</a>
-            </c:if>
-        </c:if>
-    </div>
-
-    <c:if test="${empty artworks}">
-        <div class="empty-gallery">
-            В этой галерее пока нет работ.
-            <c:if test="${isOwner}">
-                <br><a href="<c:url value='/gallery-manage/add-artwork?galleryId=${gallery.id}'/>">Добавить первую работу</a>
-            </c:if>
-        </div>
-    </c:if>
-
-    <div class="artworks-grid">
-        <c:forEach var="art" items="${artworks}">
-            <a href="<c:url value='/artwork/${art.id}'/>" class="artwork-thumb">
-                <img src="<c:url value='${art.imagePath}'/>" alt="<c:out value='${art.title}'/>" loading="lazy">
-                <p><c:out value="${art.title}"/></p>
+            <a class="cancel" href="<c:url value='/gallery-manage/add-artwork?galleryId=${gallery.id}'/>">
+                Добавить работу в галерею
             </a>
-        </c:forEach>
-    </div>
+        </c:if>
 
-    <br>
-    <a href="<c:url value='/'/>">На главную</a>
-</body>
-</html>
+        <c:if test="${empty artworks}">
+            <p class="empty-note">В этой галерее пока нет работ.</p>
+        </c:if>
+
+        <div class="gallery-thumbs">
+            <c:forEach var="art" items="${artworks}">
+                <a href="<c:url value='/artwork/${art.id}'/>">
+                    <img src="<c:url value='${art.imagePath}'/>" alt="<c:out value='${art.title}'/>" loading="lazy">
+                    <p><c:out value="${art.title}"/></p>
+                </a>
+            </c:forEach>
+        </div>
+
+        <p style="margin-top: 22px;">
+            <a class="cancel" href="<c:url value='/'/>">На главную</a>
+        </p>
+    </main>
+</div>
+
+<%@ include file="/WEB-INF/jsp/fragments/footer.jsp" %>

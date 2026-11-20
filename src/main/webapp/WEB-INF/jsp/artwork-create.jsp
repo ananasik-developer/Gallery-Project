@@ -1,36 +1,31 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Создание работы</title>
-</head>
-<body>
-    <h2>Новая работа</h2>
+<c:set var="pageTitle" value="Новая работа"/>
+<%@ include file="/WEB-INF/jsp/fragments/header.jsp" %>
 
-    <c:if test="${not empty error}">
-        <p style="color: red;"><c:out value="${error}"/></p>
-    </c:if>
+<div class="page">
+    <main class="content">
+        <h1>Новая работа</h1>
+        <p class="subtitle">Работа сохранится как черновик. Опубликовать её можно со страницы работы.</p>
 
-    <form method="post" action="<c:url value='/artwork/create'/>"
-          enctype="multipart/form-data">
-        <label>Название:<br>
-            <input type="text" name="title"
-                   value="<c:out value='${title}'/>" required maxlength="500">
-        </label>
-        <br><br>
-        <label>Описание:<br>
-            <textarea name="description" rows="4" cols="50"><c:out value="${description}"/></textarea>
-        </label>
-        <br><br>
-        <label>Изображение (JPG/PNG, макс 10MB):<br>
-            <input type="file" name="imageFile" accept="image/jpeg,image/png" required>
-        </label>
-        <br><br>
+        <c:if test="${not empty error}">
+            <p class="notice error"><c:out value="${error}"/></p>
+        </c:if>
 
-        <button type="submit">Сохранить черновик</button>
-        <a href="<c:url value='/'/>">Отмена</a>
-    </form>
-</body>
-</html>
+        <form class="form" method="post" action="<c:url value='/artwork/create'/>" enctype="multipart/form-data">
+            <label>Название
+                <input type="text" name="title" value="<c:out value='${title}'/>" required maxlength="500">
+            </label>
+            <label>Описание
+                <textarea name="description" rows="5"><c:out value="${description}"/></textarea>
+            </label>
+            <label>Изображение, JPG или PNG до 10 МБ
+                <input type="file" name="imageFile" accept="image/jpeg,image/png" required>
+            </label>
+            <button type="submit">Сохранить черновик</button>
+            <a class="cancel" href="<c:url value='/'/>">Отмена</a>
+        </form>
+    </main>
+</div>
+
+<%@ include file="/WEB-INF/jsp/fragments/footer.jsp" %>

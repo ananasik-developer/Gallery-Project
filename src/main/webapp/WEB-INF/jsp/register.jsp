@@ -1,40 +1,30 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Регистрация</title>
-</head>
-<body>
-    <h2>Регистрация</h2>
+<c:set var="pageTitle" value="Регистрация"/>
+<%@ include file="/WEB-INF/jsp/fragments/header.jsp" %>
 
-    <c:if test="${not empty error}">
-        <p style="color: red;"><c:out value="${error}"/></p>
-    </c:if>
+<div class="page">
+    <main class="content">
+        <h1>Регистрация</h1>
 
-    <c:if test="${param.registered == '1'}">
-        <p style="color: green;">Регистрация успешна! Теперь войдите.</p>
-    </c:if>
+        <c:if test="${not empty error}">
+            <p class="notice error"><c:out value="${error}"/></p>
+        </c:if>
 
-    <form method="post" action="<c:url value='/register'/>">
-        <label>Логин (мин. 3 символа):<br>
-            <input type="text" name="username"
-                   value="<c:out value='${username}'/>" minlength="3" required>
-        </label>
-        <br><br>
-        <label>Email:<br>
-            <input type="email" name="email"
-                   value="<c:out value='${email}'/>" required>
-        </label>
-        <br><br>
-        <label>Пароль (мин. 6 символов):<br>
-            <input type="password" name="password" minlength="6" required>
-        </label>
-        <br><br>
-        <button type="submit">Зарегистрироваться</button>
-    </form>
+        <form class="form" method="post" action="<c:url value='/register'/>">
+            <label>Логин, минимум 3 символа
+                <input type="text" name="username" value="<c:out value='${username}'/>" minlength="3" required>
+            </label>
+            <label>Email
+                <input type="email" name="email" value="<c:out value='${email}'/>" required>
+            </label>
+            <label>Пароль, минимум 6 символов
+                <input type="password" name="password" minlength="6" required>
+            </label>
+            <button type="submit">Зарегистрироваться</button>
+            <a class="cancel" href="<c:url value='/login'/>">Войти</a>
+        </form>
+    </main>
+</div>
 
-    <p>Уже есть аккаунт? <a href="<c:url value='/login'/>">Войти</a></p>
-</body>
-</html>
+<%@ include file="/WEB-INF/jsp/fragments/footer.jsp" %>

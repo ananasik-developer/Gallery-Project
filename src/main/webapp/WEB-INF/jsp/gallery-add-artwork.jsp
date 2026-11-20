@@ -1,40 +1,39 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Добавить работу в галерею</title>
-</head>
-<body>
-    <h2>Добавить работу в галерею</h2>
+<c:set var="pageTitle" value="Добавить работу"/>
+<%@ include file="/WEB-INF/jsp/fragments/header.jsp" %>
 
-    <c:if test="${not empty error}">
-        <p style="color: red;"><c:out value="${error}"/></p>
-    </c:if>
+<div class="page">
+    <main class="content">
+        <h1>Добавить работу в галерею</h1>
 
-    <c:if test="${empty userArtworks}">
-        <p>У вас нет опубликованных работ. Сначала создайте и опубликуйте работу.</p>
-        <a href="<c:url value='/artwork/create'/>">Создать работу</a>
-    </c:if>
+        <c:if test="${not empty error}">
+            <p class="notice error"><c:out value="${error}"/></p>
+        </c:if>
 
-    <c:if test="${not empty userArtworks}">
-        <form method="post" action="<c:url value='/gallery-manage/add-artwork'/>">
-            <input type="hidden" name="galleryId" value="${galleryId}">
+        <c:if test="${empty userArtworks}">
+            <p class="notice">
+                У вас нет опубликованных работ. Сначала создайте работу и опубликуйте её.
+            </p>
+            <a class="cancel" href="<c:url value='/artwork/create'/>">Создать работу</a>
+        </c:if>
 
-            <label>Выберите работу:<br>
-                <select name="artworkId" required style="width: 100%; padding: 8px; margin-top: 5px;">
-                    <option value="">Выберите</option>
-                    <c:forEach var="art" items="${userArtworks}">
-                        <option value="${art.id}"><c:out value="${art.title}"/></option>
-                    </c:forEach>
-                </select>
-            </label>
+        <c:if test="${not empty userArtworks}">
+            <form class="form" method="post" action="<c:url value='/gallery-manage/add-artwork'/>">
+                <input type="hidden" name="galleryId" value="${galleryId}">
+                <label>Работа
+                    <select name="artworkId" required>
+                        <option value="">Выберите работу</option>
+                        <c:forEach var="art" items="${userArtworks}">
+                            <option value="${art.id}"><c:out value="${art.title}"/></option>
+                        </c:forEach>
+                    </select>
+                </label>
+                <button type="submit">Добавить</button>
+                <a class="cancel" href="<c:url value='/gallery/${galleryId}'/>">Отмена</a>
+            </form>
+        </c:if>
+    </main>
+</div>
 
-            <br><br>
-            <button type="submit">Добавить в галерею</button>
-            <a href="<c:url value='/gallery/${galleryId}'/>">Отмена</a>
-        </form>
-    </c:if>
-</body>
-</html>
+<%@ include file="/WEB-INF/jsp/fragments/footer.jsp" %>
