@@ -46,8 +46,10 @@ public class ArtworkService {
         Artwork art = artworkDao.findById(id)
                 .orElseThrow(() -> new RuntimeException("Работа не найдена"));
 
-        if ("DRAFT".equals(art.getStatus()) && !art.getAuthorId().equals(currentUser.getId())) {
-            throw new RuntimeException("Нет прав на просмотр чужого черновика");
+        if ("DRAFT".equals(art.getStatus())) {
+            if (currentUser == null || !art.getAuthorId().equals(currentUser.getId())) {
+                throw new RuntimeException("Нет прав на просмотр чужого черновика");
+            }
         }
 
         return art;

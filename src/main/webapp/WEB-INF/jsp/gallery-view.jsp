@@ -4,7 +4,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>${gallery.title}</title>
+    <title><c:out value="${gallery.title}"/></title>
     <style>
         body { font-family: sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
         .gallery-header { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
@@ -25,10 +25,10 @@
 </head>
 <body>
     <div class="gallery-header">
-        <h1>${gallery.title}</h1>
-        <p>${gallery.description}</p>
+        <h1><c:out value="${gallery.title}"/></h1>
+        <p><c:out value="${gallery.description}"/></p>
         <div class="gallery-meta">
-            Автор: ${gallery.authorUsername} |
+            Автор: <c:out value="${gallery.authorUsername}"/> |
             Работ: ${artworks.size()}
         </div>
         <c:if test="${isOwner}">
@@ -51,8 +51,8 @@
     <div class="artworks-grid">
         <c:forEach var="art" items="${artworks}">
             <a href="<c:url value='/artwork/${art.id}'/>" class="artwork-thumb">
-                <img src="<c:url value='${art.imagePath}'/>" alt="${art.title}" loading="lazy">
-                <p>${art.title}</p>
+                <img src="<c:url value='${art.imagePath}'/>" alt="<c:out value='${art.title}'/>" loading="lazy">
+                <p><c:out value="${art.title}"/></p>
             </a>
         </c:forEach>
     </div>

@@ -47,8 +47,8 @@ public class GalleryViewServlet extends HttpServlet {
         }
 
         try {
-            Gallery gallery = galleryService.findById(galleryId); // Нужно добавить этот метод
-            List<Artwork> artworks = galleryService.getGalleryArtworks(galleryId, currentUser);
+            Gallery gallery = galleryService.findById(galleryId);
+            List<Artwork> artworks = galleryService.getGalleryArtworks(galleryId);
             boolean isOwner = currentUser != null && gallery.getAuthorId().equals(currentUser.getId());
 
             req.setAttribute("gallery", gallery);

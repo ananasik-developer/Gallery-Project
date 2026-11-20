@@ -26,7 +26,9 @@ public class ArtworkPublishServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        SessionUser currentUser = (SessionUser) session.getAttribute("currentUser");
+        SessionUser currentUser = session == null
+                ? null
+                : (SessionUser) session.getAttribute("currentUser");
 
         if (currentUser == null) {
             resp.sendRedirect(req.getContextPath() + "/login");

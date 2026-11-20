@@ -10,7 +10,7 @@
     <h2>Добавить работу в галерею</h2>
 
     <c:if test="${not empty error}">
-        <p style="color: red;">${error}</p>
+        <p style="color: red;"><c:out value="${error}"/></p>
     </c:if>
 
     <c:if test="${empty userArtworks}">
@@ -26,7 +26,7 @@
                 <select name="artworkId" required style="width: 100%; padding: 8px; margin-top: 5px;">
                     <option value="">Выберите</option>
                     <c:forEach var="art" items="${userArtworks}">
-                        <option value="${art.id}">${art.title}</option>
+                        <option value="${art.id}"><c:out value="${art.title}"/></option>
                     </c:forEach>
                 </select>
             </label>

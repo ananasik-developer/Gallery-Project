@@ -22,13 +22,7 @@ public class GalleryService {
         galleryDao.save(gallery);
     }
 
-    public List<Artwork> getGalleryArtworks(long galleryId, SessionUser owner) {
-        Gallery g = galleryDao.findById(galleryId)
-                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
-
-        if (!g.getAuthorId().equals(owner.getId())) {
-        }
-
+    public List<Artwork> getGalleryArtworks(long galleryId) {
         return galleryDao.getGalleryArtworks(galleryId);
     }
 

@@ -46,7 +46,9 @@ public class ArtworkCreateServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = req.getSession(false);
-        SessionUser currentUser = (SessionUser) session.getAttribute("currentUser");
+        SessionUser currentUser = session == null
+                ? null
+                : (SessionUser) session.getAttribute("currentUser");
 
         if (currentUser == null) {
             resp.sendRedirect(req.getContextPath() + "/login");

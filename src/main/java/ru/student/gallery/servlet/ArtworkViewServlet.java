@@ -27,7 +27,9 @@ public class ArtworkViewServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        SessionUser currentUser = (SessionUser) session.getAttribute("currentUser");
+        SessionUser currentUser = session == null
+                ? null
+                : (SessionUser) session.getAttribute("currentUser");
 
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.length() <= 1) {

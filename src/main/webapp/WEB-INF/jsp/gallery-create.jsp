@@ -10,17 +10,17 @@
     <h2>Создание галереи</h2>
 
     <c:if test="${not empty error}">
-        <p style="color: red;">${error}</p>
+        <p style="color: red;"><c:out value="${error}"/></p>
     </c:if>
 
     <form method="post" action="<c:url value='/gallery/create'/>">
         <label>Название:<br>
             <input type="text" name="title"
-                   value="${title}" required maxlength="500">
+                   value="<c:out value='${title}'/>" required maxlength="500">
         </label>
         <br><br>
         <label>Описание:<br>
-            <textarea name="description" rows="4" cols="50">${description}</textarea>
+            <textarea name="description" rows="4" cols="50"><c:out value="${description}"/></textarea>
         </label>
         <br><br>
 

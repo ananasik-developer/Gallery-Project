@@ -10,7 +10,7 @@
     <h2>Регистрация</h2>
 
     <c:if test="${not empty error}">
-        <p style="color: red;">${error}</p>
+        <p style="color: red;"><c:out value="${error}"/></p>
     </c:if>
 
     <c:if test="${param.registered == '1'}">
@@ -20,12 +20,12 @@
     <form method="post" action="<c:url value='/register'/>">
         <label>Логин (мин. 3 символа):<br>
             <input type="text" name="username"
-                   value="${username}" minlength="3" required>
+                   value="<c:out value='${username}'/>" minlength="3" required>
         </label>
         <br><br>
         <label>Email:<br>
             <input type="email" name="email"
-                   value="${email}" required>
+                   value="<c:out value='${email}'/>" required>
         </label>
         <br><br>
         <label>Пароль (мин. 6 символов):<br>

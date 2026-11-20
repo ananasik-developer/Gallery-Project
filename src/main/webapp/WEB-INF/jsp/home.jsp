@@ -39,7 +39,7 @@
 
     <c:choose>
         <c:when test="${not empty currentUser}">
-            <p>Вы вошли как: <strong>${currentUser.username}</strong></p>
+            <p>Вы вошли как: <strong><c:out value="${currentUser.username}"/></strong></p>
             <a href="<c:url value='/artwork/create'/>">Создать новую работу</a>
             <a href="<c:url value='/gallery/create'/>">Создать галерею</a>|
             <a href="<c:url value='/logout'/>">Выйти</a>
@@ -61,9 +61,9 @@
         <c:forEach var="art" items="${feed}">
             <div class="artwork-card">
                 <a href="<c:url value='/artwork/${art.id}'/>">
-                    <img src="<c:url value='${art.imagePath}'/>" alt="${art.title}">
-                    <h3>${art.title}</h3>
-                    <p>Автор: ${art.authorUsername}</p>
+                    <img src="<c:url value='${art.imagePath}'/>" alt="<c:out value='${art.title}'/>">
+                    <h3><c:out value="${art.title}"/></h3>
+                    <p>Автор: <c:out value="${art.authorUsername}"/></p>
                 </a>
             </div>
         </c:forEach>
