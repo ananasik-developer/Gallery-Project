@@ -80,7 +80,9 @@ public class JdbcGalleryDao implements GalleryDao {
 
     @Override
     public List<Gallery> findByAuthorId(long authorId) {
-        String sql = "SELECT * FROM galleries WHERE author_id = ? ORDER BY created_at DESC";
+        String sql = "SELECT g.*, u.username as author_username FROM galleries g " +
+                "JOIN users u ON g.author_id = u.id " +
+                "WHERE g.author_id = ? ORDER BY g.created_at DESC";
         List<Gallery> list = new ArrayList<>();
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

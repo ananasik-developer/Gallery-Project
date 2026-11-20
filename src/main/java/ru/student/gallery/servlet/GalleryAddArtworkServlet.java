@@ -57,10 +57,7 @@ public class GalleryAddArtworkServlet extends HttpServlet {
             return;
         }
 
-        List<Artwork> userArtworks = artworkService.getUserGallery(currentUser.getId())
-                .stream()
-                .filter(a -> "PUBLISHED".equals(a.getStatus()))
-                .toList();
+        List<Artwork> userArtworks = artworkService.getPublishedByAuthor(currentUser.getId());
 
         req.setAttribute("galleryId", galleryId);
         req.setAttribute("userArtworks", userArtworks);
@@ -88,10 +85,7 @@ public class GalleryAddArtworkServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/gallery/" + galleryId);
         } catch (RuntimeException e) {
             req.setAttribute("error", e.getMessage());
-            List<Artwork> userArtworks = artworkService.getUserGallery(currentUser.getId())
-                    .stream()
-                    .filter(a -> "PUBLISHED".equals(a.getStatus()))
-                    .toList();
+            List<Artwork> userArtworks = artworkService.getPublishedByAuthor(currentUser.getId());
             req.setAttribute("galleryId", galleryId);
             req.setAttribute("userArtworks", userArtworks);
             req.getRequestDispatcher("/WEB-INF/jsp/gallery-add-artwork.jsp").forward(req, resp);

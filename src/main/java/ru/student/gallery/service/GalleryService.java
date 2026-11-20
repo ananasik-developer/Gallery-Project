@@ -26,8 +26,8 @@ public class GalleryService {
         return galleryDao.getGalleryArtworks(galleryId);
     }
 
-    public List<Gallery> getUserGalleries(SessionUser user) {
-        return galleryDao.findByAuthorId(user.getId());
+    public List<Gallery> getByAuthorId(long authorId) {
+        return galleryDao.findByAuthorId(authorId);
     }
 
     public void addArtwork(long galleryId, long artworkId, SessionUser owner) {

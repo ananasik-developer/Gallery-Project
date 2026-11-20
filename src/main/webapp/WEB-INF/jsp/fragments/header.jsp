@@ -19,9 +19,16 @@
             <c:when test="${not empty currentUser}">
                 <a class="action-link" href="<c:url value='/artwork/create'/>">Новая работа</a>
                 <a class="action-link" href="<c:url value='/gallery/create'/>">Новая галерея</a>
-                <span class="nickname"><c:out value="${currentUser.username}"/></span>
+                <a class="nickname" href="<c:url value='/profile'/>"><c:out value="${currentUser.username}"/></a>
                 <span class="user-id">id: ${currentUser.id}</span>
-                <span class="avatar"></span>
+                <c:choose>
+                    <c:when test="${not empty currentUser.avatarPath}">
+                        <img class="avatar" src="<c:url value='${currentUser.avatarPath}'/>" alt="">
+                    </c:when>
+                    <c:otherwise>
+                        <span class="avatar"></span>
+                    </c:otherwise>
+                </c:choose>
                 <a class="auth-link" href="<c:url value='/logout'/>">Выйти</a>
             </c:when>
             <c:otherwise>

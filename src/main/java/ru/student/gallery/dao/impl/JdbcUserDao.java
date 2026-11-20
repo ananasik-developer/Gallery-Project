@@ -84,6 +84,22 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public void update(User user) {
+        String sql = "UPDATE users SET username = ?, bio = ?, tg_link = ?, avatar_path = ? WHERE id = ?";
+        try (Connection c = DbConfig.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getBio());
+            ps.setString(3, user.getTgLink());
+            ps.setString(4, user.getAvatarPath());
+            ps.setLong(5, user.getId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean existsByUsername(String username) {
         String sql = "SELECT 1 FROM users WHERE username = ?";
         try (Connection c = DbConfig.getConnection();

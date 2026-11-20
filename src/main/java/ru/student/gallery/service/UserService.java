@@ -46,6 +46,42 @@ public class UserService {
         userDao.save(user);
     }
 
+    public User updateProfile(long userId, String username, String bio, String tgLink, String avatarPath) {
+        User user = userDao.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+
+        String newName = username == null ? "" : username.trim();
+        if (newName.length() < 3) {
+            throw new IllegalArgumentException("Имя пользователя: минимум 3 символа");
+        }
+        if (newName.length() > 50) {
+            throw new IllegalArgumentException("Имя пользователя: максимум 50 символов");
+        }
+
+        Optional<User> sameName = userDao.findByUsername(newName);
+        if (sameName.isPresent() && !sameName.get().getId().equals(userId)) {
+            throw new IllegalArgumentException("Имя уже занято");
+        }
+
+        String newBio = bio == null ? "" : bio.trim();
+        if (newBio.length() > 1000) {
+            throw new IllegalArgumentException("О себе: максимум 1000 символов");
+        }
+
+        String newTg = tgLink == null ? "" : tgLink.trim();
+        if (newTg.length() > 255) {
+            throw new IllegalArgumentException("Ссылка: максимум 255 символов");
+        }
+
+        user.setUsername(newName);
+        user.setBio(newBio.isEmpty() ? null : newBio);
+        user.setTgLink(newTg.isEmpty() ? null : newTg);
+        user.setAvatarPath(avatarPath);
+
+        userDao.update(user);
+        return user;
+    }
+
     public Optional<User> authenticate(String username, String password) {
         if (username == null || password == null) return Optional.empty();
         Optional<User> found = userDao.findByUsername(username.trim());

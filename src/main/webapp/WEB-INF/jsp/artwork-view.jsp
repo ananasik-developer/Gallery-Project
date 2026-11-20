@@ -9,7 +9,8 @@
             <h1><c:out value="${artwork.title}"/></h1>
 
             <p class="artwork-meta">
-                Автор: <c:out value="${artwork.authorUsername}"/>
+                Автор:
+                <a href="<c:url value='/profile/${artwork.authorId}'/>"><c:out value="${artwork.authorUsername}"/></a>
                 |
                 <c:choose>
                     <c:when test="${artwork.status == 'DRAFT'}">черновик</c:when>

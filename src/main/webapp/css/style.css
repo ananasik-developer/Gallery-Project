@@ -60,6 +60,7 @@ a {
 .user-box .nickname {
     font-weight: 700;
     margin-left: 10px;
+    text-decoration: none;
 }
 
 .user-box .user-id {
@@ -72,6 +73,7 @@ a {
     border-radius: 50%;
     background: #ffffff;
     border: 1px solid #cbbd97;
+    object-fit: cover;
 }
 
 .user-box .auth-link {
@@ -337,6 +339,97 @@ a {
 .gallery-thumbs p {
     margin-top: 5px;
     font-size: 12px;
+}
+
+.profile-head {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.profile-avatar {
+    display: block;
+    flex-shrink: 0;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ffffff;
+    border: 1px solid #cbbd97;
+}
+
+.profile-info h1 {
+    margin-bottom: 4px;
+}
+
+.profile-bio {
+    margin-top: 10px;
+    max-width: 620px;
+    line-height: 1.6;
+}
+
+.profile-tg {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #4a4232;
+}
+
+.profile-actions {
+    margin-top: 12px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 26px 0 12px;
+}
+
+.draft-list {
+    display: grid;
+    gap: 10px;
+    max-width: 620px;
+}
+
+.draft-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border: 1px solid #ddd2ae;
+    background: #fffdf5;
+}
+
+.draft-item img {
+    display: block;
+    width: 52px;
+    height: 68px;
+    object-fit: cover;
+    background: #c98c93;
+}
+
+.draft-item .draft-title {
+    flex: 1;
+    font-size: 14px;
+}
+
+.draft-item button {
+    padding: 6px 14px;
+    border: 1px solid #8d7f5c;
+    background: #efe0b7;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.draft-item button:hover {
+    background: #e6d4a4;
+}
+
+.gallery-list {
+    display: grid;
+    gap: 8px;
+    max-width: 620px;
 }
 
 .site-footer {

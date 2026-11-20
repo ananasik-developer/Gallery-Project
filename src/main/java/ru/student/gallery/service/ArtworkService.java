@@ -55,8 +55,16 @@ public class ArtworkService {
         return art;
     }
 
-    public List<Artwork> getUserGallery(long userId) {
-        return artworkDao.findByAuthorId(userId);
+    public List<Artwork> getPublishedByAuthor(long authorId) {
+        return artworkDao.findByAuthorId(authorId).stream()
+                .filter(a -> "PUBLISHED".equals(a.getStatus()))
+                .toList();
+    }
+
+    public List<Artwork> getDraftsByAuthor(long authorId) {
+        return artworkDao.findByAuthorId(authorId).stream()
+                .filter(a -> "DRAFT".equals(a.getStatus()))
+                .toList();
     }
 
     public List<Artwork> search(String query) {
