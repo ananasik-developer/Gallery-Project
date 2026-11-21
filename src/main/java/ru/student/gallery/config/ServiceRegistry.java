@@ -14,7 +14,7 @@ public class ServiceRegistry {
     public <T> T getService(String name, Class<T> type) {
         Object service = services.get(name);
         if (service == null) {
-            throw new IllegalStateException("Service not found: " + name);
+            throw new IllegalStateException("Сервис не найден: " + name);
         }
         return (T) service;
     }

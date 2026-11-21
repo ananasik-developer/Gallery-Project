@@ -7,7 +7,8 @@
     <main class="content">
         <h1><c:out value="${gallery.title}"/></h1>
         <p class="subtitle">
-            Автор: <c:out value="${gallery.authorUsername}"/>
+            Автор:
+            <a href="<c:url value='/profile/${gallery.authorId}'/>"><c:out value="${gallery.authorUsername}"/></a>
             |
             работ: ${artworks.size()}
         </p>
@@ -15,9 +16,41 @@
         <p class="artwork-description"><c:out value="${gallery.description}"/></p>
 
         <c:if test="${isOwner}">
-            <a class="cancel" href="<c:url value='/gallery-manage/add-artwork?galleryId=${gallery.id}'/>">
-                Добавить работу в галерею
-            </a>
+            <p class="profile-actions">
+                <a class="cancel" href="<c:url value='/gallery-manage/add-artwork?galleryId=${gallery.id}'/>">
+                    Добавить работу в галерею
+                </a>
+            </p>
+
+            <div class="publication-actions">
+                <form class="inline-form" method="post" action="<c:url value='/gallery/featured'/>">
+                    <input type="hidden" name="galleryId" value="${gallery.id}">
+                    <c:choose>
+                        <c:when test="${gallery.featured}">
+                            <input type="hidden" name="featured" value="false">
+                            <button type="submit">Убрать с главной</button>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="hidden" name="featured" value="true">
+                            <button type="submit">Опубликовать на главной</button>
+                        </c:otherwise>
+                    </c:choose>
+                </form>
+
+                <form class="inline-form" method="post" action="<c:url value='/gallery/commission'/>">
+                    <input type="hidden" name="galleryId" value="${gallery.id}">
+                    <c:choose>
+                        <c:when test="${gallery.availableForCommission}">
+                            <input type="hidden" name="available" value="false">
+                            <button type="submit">Убрать из поиска исполнителя</button>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="hidden" name="available" value="true">
+                            <button type="submit">В поиск исполнителя</button>
+                        </c:otherwise>
+                    </c:choose>
+                </form>
+            </div>
         </c:if>
 
         <c:if test="${empty artworks}">

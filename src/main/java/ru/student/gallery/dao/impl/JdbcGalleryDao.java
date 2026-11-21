@@ -123,6 +123,66 @@ public class JdbcGalleryDao implements GalleryDao {
         }
     }
 
+    @Override
+    public List<Gallery> findAvailableForCommission() {
+        String sql = "SELECT g.*, u.username as author_username FROM galleries g " +
+                "JOIN users u ON g.author_id = u.id " +
+                "WHERE g.available_for_commission = true " +
+                "ORDER BY g.created_at DESC";
+        List<Gallery> list = new ArrayList<>();
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
+    @Override
+    public void setCommission(long galleryId, boolean available) {
+        String sql = "UPDATE galleries SET available_for_commission = ? WHERE id = ?";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, available);
+            ps.setLong(2, galleryId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Gallery> findFeatured() {
+        String sql = "SELECT g.*, u.username as author_username FROM galleries g " +
+                "JOIN users u ON g.author_id = u.id " +
+                "WHERE g.featured = true " +
+                "ORDER BY g.created_at DESC";
+        List<Gallery> list = new ArrayList<>();
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
+    @Override
+    public void setFeatured(long galleryId, boolean featured) {
+        String sql = "UPDATE galleries SET featured = ? WHERE id = ?";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, featured);
+            ps.setLong(2, galleryId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Gallery mapRow(ResultSet rs) throws SQLException {
         Gallery g = new Gallery();
         g.setId(rs.getLong("id"));
@@ -134,6 +194,10 @@ public class JdbcGalleryDao implements GalleryDao {
 
         String username = rs.getString("author_username");
         if (username != null) g.setAuthorUsername(username);
+
+        g.setAvailableForCommission(rs.getBoolean("available_for_commission"));
+        g.setFeatured(rs.getBoolean("featured"));
+
         return g;
     }
 }

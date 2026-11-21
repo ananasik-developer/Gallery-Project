@@ -12,6 +12,8 @@ public class Gallery {
     private LocalDateTime createdAt;
     private List<Artwork> artworks;
     private String authorUsername;
+    private boolean availableForCommission;
+    private boolean featured;
 
     public Long getId() {
         return id;
@@ -67,5 +69,19 @@ public class Gallery {
     }
     public void setAuthorUsername(String authorUsername) {
         this.authorUsername = authorUsername;
+    }
+
+    public boolean isAvailableForCommission() {
+        return availableForCommission;
+    }
+    public void setAvailableForCommission(boolean availableForCommission) {
+        this.availableForCommission = availableForCommission;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
 }

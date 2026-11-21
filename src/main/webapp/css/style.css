@@ -204,6 +204,13 @@ a {
     outline: 3px solid #3b8fd8;
 }
 
+.artwork-card .card-caption {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
 .about-text {
     max-width: 640px;
     line-height: 1.7;
@@ -430,6 +437,142 @@ a {
     display: grid;
     gap: 8px;
     max-width: 620px;
+}
+
+.publication-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.publication-actions .inline-form {
+    margin-bottom: 0;
+}
+
+.gallery-rows {
+    max-width: 620px;
+}
+
+.gallery-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid #e4dbbd;
+}
+
+.gallery-row a {
+    flex: 1;
+}
+
+.gallery-row button {
+    padding: 5px 12px;
+    border: 1px solid #8d7f5c;
+    background: #efe0b7;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.gallery-row button:hover {
+    background: #e6d4a4;
+}
+
+.strip {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+.strip-track {
+    display: flex;
+    gap: 16px;
+    overflow: hidden;
+    scroll-behavior: smooth;
+}
+
+.strip-slide {
+    flex: 0 0 300px;
+    text-decoration: none;
+}
+
+.strip-slide .collage {
+    height: 150px;
+}
+
+.strip-prev,
+.strip-next {
+    position: absolute;
+    top: 75px;
+    width: 26px;
+    height: 26px;
+    border: 1px solid #8d7f5c;
+    background: #efe0b7;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.strip-prev {
+    left: 6px;
+}
+
+.strip-next {
+    right: 6px;
+}
+
+.gallery-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.gallery-card {
+    display: block;
+    text-decoration: none;
+}
+
+.collage {
+    display: flex;
+    gap: 3px;
+    height: 180px;
+    overflow: hidden;
+    background: #c98c93;
+}
+
+.collage img {
+    display: block;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.collage img:first-child {
+    flex: 2;
+}
+
+.collage-empty {
+    display: block;
+    flex: 1;
+    background: #c98c93;
+}
+
+.gallery-card:hover .collage {
+    outline: 3px solid #3b8fd8;
+}
+
+.gallery-caption {
+    display: block;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.gallery-meta-compact {
+    display: block;
+    font-size: 12px;
+    color: #4a4232;
 }
 
 .site-footer {

@@ -15,14 +15,4 @@ public class PasswordHasher {
             return false;
         }
     }
-
-    public static void main(String[] args) {
-        String password = "123456";
-
-        String hash = hash(password);
-        System.out.println(hash);
-
-        boolean ok = matches(password, hash);
-        System.out.println("Проверка совпадения: " + ok);
-    }
 }

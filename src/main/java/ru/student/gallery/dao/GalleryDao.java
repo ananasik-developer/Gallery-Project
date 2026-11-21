@@ -13,4 +13,10 @@ public interface GalleryDao {
     void removeArtworkFromGallery(long galleryId, long artworkId);
 
     List<Artwork> getGalleryArtworks(long galleryId);
+
+    List<Gallery> findAvailableForCommission();
+    void setCommission(long galleryId, boolean available);
+
+    List<Gallery> findFeatured();
+    void setFeatured(long galleryId, boolean featured);
 }

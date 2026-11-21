@@ -23,7 +23,46 @@ public class GalleryService {
     }
 
     public List<Artwork> getGalleryArtworks(long galleryId) {
-        return galleryDao.getGalleryArtworks(galleryId);
+        return galleryDao.getGalleryArtworks(galleryId).stream()
+                .filter(a -> "PUBLISHED".equals(a.getStatus()))
+                .toList();
+    }
+
+    public List<Gallery> getCommissionGalleries() {
+        return fillArtworks(galleryDao.findAvailableForCommission());
+    }
+
+    public List<Gallery> getFeaturedGalleries() {
+        return fillArtworks(galleryDao.findFeatured());
+    }
+
+    public void setCommission(long galleryId, boolean available, SessionUser owner) {
+        Gallery gallery = galleryDao.findById(galleryId)
+                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
+
+        if (!gallery.getAuthorId().equals(owner.getId())) {
+            throw new RuntimeException("Нет прав на изменение чужой галереи");
+        }
+
+        galleryDao.setCommission(galleryId, available);
+    }
+
+    public void setFeatured(long galleryId, boolean featured, SessionUser owner) {
+        Gallery gallery = galleryDao.findById(galleryId)
+                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
+
+        if (!gallery.getAuthorId().equals(owner.getId())) {
+            throw new RuntimeException("Нет прав на изменение чужой галереи");
+        }
+
+        galleryDao.setFeatured(galleryId, featured);
+    }
+
+    private List<Gallery> fillArtworks(List<Gallery> galleries) {
+        for (Gallery gallery : galleries) {
+            gallery.setArtworks(getGalleryArtworks(gallery.getId()));
+        }
+        return galleries;
     }
 
     public List<Gallery> getByAuthorId(long authorId) {

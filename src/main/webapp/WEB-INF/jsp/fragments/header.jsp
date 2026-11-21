@@ -12,6 +12,7 @@
     <a class="logo" href="<c:url value='/'/>"></a>
     <nav class="main-nav">
         <a href="<c:url value='/'/>">Главная</a>
+        <a href="<c:url value='/artists'/>">Поиск исполнителя</a>
         <a href="<c:url value='/about'/>">О нас</a>
     </nav>
     <div class="user-box">

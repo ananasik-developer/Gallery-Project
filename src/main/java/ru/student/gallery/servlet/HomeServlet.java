@@ -10,6 +10,7 @@ import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
+import ru.student.gallery.service.GalleryService;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,11 +18,13 @@ import java.util.List;
 @WebServlet("")
 public class HomeServlet extends HttpServlet {
     private ArtworkService artworkService;
+    private GalleryService galleryService;
 
     @Override
     public void init() throws ServletException {
         var registry = (ServiceRegistry) getServletContext().getAttribute("serviceRegistry");
         artworkService = registry.getService("artworkService", ArtworkService.class);
+        galleryService = registry.getService("galleryService", GalleryService.class);
     }
 
     @Override
@@ -44,6 +47,7 @@ public class HomeServlet extends HttpServlet {
         }
 
         req.setAttribute("feed", feed);
+        req.setAttribute("featuredGalleries", galleryService.getFeaturedGalleries());
         req.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
     }
 }

@@ -38,6 +38,52 @@
             </div>
         </div>
 
+        <h2 class="section-title">Галереи</h2>
+
+        <c:if test="${empty galleries}">
+            <p class="empty-note">Галерей пока нет.</p>
+        </c:if>
+
+        <div class="gallery-rows">
+            <c:forEach var="g" items="${galleries}">
+                <div class="gallery-row">
+                    <a href="<c:url value='/gallery/${g.id}'/>"><c:out value="${g.title}"/></a>
+
+                    <c:if test="${isOwner}">
+                        <form method="post" action="<c:url value='/gallery/featured'/>">
+                            <input type="hidden" name="galleryId" value="${g.id}">
+                            <input type="hidden" name="back" value="profile">
+                            <c:choose>
+                                <c:when test="${g.featured}">
+                                    <input type="hidden" name="featured" value="false">
+                                    <button type="submit">Убрать с главной</button>
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="hidden" name="featured" value="true">
+                                    <button type="submit">На главную</button>
+                                </c:otherwise>
+                            </c:choose>
+                        </form>
+
+                        <form method="post" action="<c:url value='/gallery/commission'/>">
+                            <input type="hidden" name="galleryId" value="${g.id}">
+                            <input type="hidden" name="back" value="profile">
+                            <c:choose>
+                                <c:when test="${g.availableForCommission}">
+                                    <input type="hidden" name="available" value="false">
+                                    <button type="submit">Убрать из поиска</button>
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="hidden" name="available" value="true">
+                                    <button type="submit">В поиск</button>
+                                </c:otherwise>
+                            </c:choose>
+                        </form>
+                    </c:if>
+                </div>
+            </c:forEach>
+        </div>
+
         <h2 class="section-title">Работы</h2>
 
         <c:if test="${empty published}">
@@ -72,18 +118,6 @@
                 </c:forEach>
             </div>
         </c:if>
-
-        <h2 class="section-title">Галереи</h2>
-
-        <c:if test="${empty galleries}">
-            <p class="empty-note">Галерей пока нет.</p>
-        </c:if>
-
-        <div class="gallery-list">
-            <c:forEach var="g" items="${galleries}">
-                <a href="<c:url value='/gallery/${g.id}'/>"><c:out value="${g.title}"/></a>
-            </c:forEach>
-        </div>
     </main>
 </div>
 

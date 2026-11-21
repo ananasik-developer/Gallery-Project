@@ -15,7 +15,7 @@ public class DbConfig {
     static {
         try (InputStream in = DbConfig.class.getClassLoader()
                 .getResourceAsStream("db.properties")) {
-            if (in == null) throw new IllegalStateException("db.properties not found");
+            if (in == null) throw new IllegalStateException("Файл db.properties не найден");
 
             Properties p = new Properties();
             p.load(in);
@@ -32,7 +32,7 @@ public class DbConfig {
         try {
             return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to get DB connection", e);
+            throw new RuntimeException("Не удалось подключиться к базе данных", e);
         }
     }
 }
