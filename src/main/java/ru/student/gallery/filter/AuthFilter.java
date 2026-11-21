@@ -16,6 +16,7 @@ import java.io.IOException;
         "/artwork/publish",
         "/gallery/commission",
         "/gallery/featured",
+        "/like",
         "/gallery/create",
         "/gallery/edit/*",
         "/gallery/delete/*",

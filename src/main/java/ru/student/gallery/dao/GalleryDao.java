@@ -19,4 +19,6 @@ public interface GalleryDao {
 
     List<Gallery> findFeatured();
     void setFeatured(long galleryId, boolean featured);
+
+    List<Gallery> findPopular(int limit);
 }

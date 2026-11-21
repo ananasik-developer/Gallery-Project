@@ -7,12 +7,15 @@ import jakarta.servlet.annotation.WebListener;
 import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.dao.ArtworkDao;
 import ru.student.gallery.dao.GalleryDao;
+import ru.student.gallery.dao.LikeDao;
 import ru.student.gallery.dao.UserDao;
 import ru.student.gallery.dao.impl.JdbcArtworkDao;
 import ru.student.gallery.dao.impl.JdbcGalleryDao;
+import ru.student.gallery.dao.impl.JdbcLikeDao;
 import ru.student.gallery.dao.impl.JdbcUserDao;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.GalleryService;
+import ru.student.gallery.service.LikeService;
 import ru.student.gallery.service.UserService;
 
 @WebListener
@@ -29,10 +32,14 @@ public class AppContextListener implements ServletContextListener {
         GalleryDao galleryDao = new JdbcGalleryDao();
         GalleryService galleryService = new GalleryService(galleryDao);
 
+        LikeDao likeDao = new JdbcLikeDao();
+        LikeService likeService = new LikeService(likeDao);
+
         ServiceRegistry registry = new ServiceRegistry();
         registry.register("userService", userService);
         registry.register("artworkService", artworkService);
         registry.register("galleryService", galleryService);
+        registry.register("likeService", likeService);
 
         ServletContext ctx = sce.getServletContext();
         ctx.setAttribute("serviceRegistry", registry);

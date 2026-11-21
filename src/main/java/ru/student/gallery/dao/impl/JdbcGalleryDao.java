@@ -183,6 +183,35 @@ public class JdbcGalleryDao implements GalleryDao {
         }
     }
 
+    @Override
+    public List<Gallery> findPopular(int limit) {
+        String sql = "SELECT g.*, u.username as author_username, " +
+                "COALESCE(SUM(l.c), 0) AS like_count " +
+                "FROM galleries g " +
+                "JOIN users u ON g.author_id = u.id " +
+                "LEFT JOIN gallery_artworks ga ON ga.gallery_id = g.id " +
+                "LEFT JOIN (SELECT artwork_id, COUNT(*) AS c FROM likes GROUP BY artwork_id) l " +
+                "ON l.artwork_id = ga.artwork_id " +
+                "GROUP BY g.id, u.username " +
+                "ORDER BY like_count DESC, g.created_at DESC " +
+                "LIMIT ?";
+        List<Gallery> list = new ArrayList<>();
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Gallery gallery = mapRow(rs);
+                    gallery.setLikeCount(rs.getInt("like_count"));
+                    list.add(gallery);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
     private Gallery mapRow(ResultSet rs) throws SQLException {
         Gallery g = new Gallery();
         g.setId(rs.getLong("id"));

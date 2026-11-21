@@ -24,6 +24,24 @@
 
             <p class="artwork-description"><c:out value="${artwork.description}"/></p>
 
+            <div class="like-row">
+                <c:choose>
+                    <c:when test="${empty currentUser}">
+                        <a class="like-login" href="<c:url value='/login'/>">Войдите, чтобы оценить работу</a>
+                    </c:when>
+                    <c:otherwise>
+                        <button type="button" class="like-button ${liked ? 'active' : ''}"
+                                data-artwork="${artwork.id}"
+                                data-url="<c:url value='/like'/>">
+                            <svg class="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20.5c-1-0.7-6.4-4.2-8.2-7.1C2.1 10.6 3.2 7 6.4 6c2-0.6 3.9 0.3 5 1.9 1.1-1.6 3-2.5 5-1.9 3.2 1 4.3 4.6 2.6 7.4-1.8 2.9-7.2 6.4-8.2 7.1z"/>
+                            </svg>
+                            <span class="like-count">${likeCount}</span>
+                        </button>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
             <c:if test="${isOwner && artwork.status == 'DRAFT'}">
                 <form class="inline-form" method="post" action="<c:url value='/artwork/publish'/>">
                     <input type="hidden" name="artworkId" value="${artwork.id}">
@@ -36,4 +54,5 @@
     </main>
 </div>
 
+<script src="<c:url value='/js/likes.js'/>"></script>
 <%@ include file="/WEB-INF/jsp/fragments/footer.jsp" %>

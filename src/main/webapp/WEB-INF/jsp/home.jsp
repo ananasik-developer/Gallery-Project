@@ -67,7 +67,30 @@
 
     <aside class="aside">
         <h2>Популярные галереи</h2>
-        <p class="empty-note">Появятся после лайков</p>
+
+        <c:if test="${empty popularGalleries}">
+            <p class="empty-note">Пока нет галерей</p>
+        </c:if>
+
+        <c:forEach var="g" items="${popularGalleries}">
+            <a class="popular-item" href="<c:url value='/gallery/${g.id}'/>">
+                <c:choose>
+                    <c:when test="${not empty g.artworks}">
+                        <img src="<c:url value='${g.artworks[0].imagePath}'/>" alt="<c:out value='${g.title}'/>">
+                    </c:when>
+                    <c:otherwise>
+                        <span class="popular-empty"></span>
+                    </c:otherwise>
+                </c:choose>
+                <span class="popular-title"><c:out value="${g.title}"/></span>
+                <span class="popular-likes">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 20.5c-1-0.7-6.4-4.2-8.2-7.1C2.1 10.6 3.2 7 6.4 6c2-0.6 3.9 0.3 5 1.9 1.1-1.6 3-2.5 5-1.9 3.2 1 4.3 4.6 2.6 7.4-1.8 2.9-7.2 6.4-8.2 7.1z"/>
+                    </svg>
+                    ${g.likeCount}
+                </span>
+            </a>
+        </c:forEach>
     </aside>
 </div>
 

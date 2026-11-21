@@ -65,6 +65,10 @@ public class GalleryService {
         return galleries;
     }
 
+    public List<Gallery> getPopularGalleries(int limit) {
+        return fillArtworks(galleryDao.findPopular(limit));
+    }
+
     public List<Gallery> getByAuthorId(long authorId) {
         return galleryDao.findByAuthorId(authorId);
     }

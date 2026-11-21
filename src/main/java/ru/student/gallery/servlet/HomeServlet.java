@@ -48,6 +48,7 @@ public class HomeServlet extends HttpServlet {
 
         req.setAttribute("feed", feed);
         req.setAttribute("featuredGalleries", galleryService.getFeaturedGalleries());
+        req.setAttribute("popularGalleries", galleryService.getPopularGalleries(5));
         req.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
     }
 }

@@ -14,6 +14,7 @@ public class Gallery {
     private String authorUsername;
     private boolean availableForCommission;
     private boolean featured;
+    private int likeCount;
 
     public Long getId() {
         return id;
@@ -83,5 +84,12 @@ public class Gallery {
     }
     public void setFeatured(boolean featured) {
         this.featured = featured;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
     }
 }

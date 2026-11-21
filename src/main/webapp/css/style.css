@@ -575,6 +575,82 @@ a {
     color: #4a4232;
 }
 
+.like-row {
+    margin-bottom: 18px;
+}
+
+.like-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    border: 1px solid #c9b98d;
+    background: #fffdf5;
+    color: #4a4232;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.like-button .heart {
+    width: 15px;
+    height: 15px;
+}
+
+.like-button.active {
+    border-color: #c0405a;
+    color: #c0405a;
+}
+
+.like-button.active .heart {
+    fill: #c0405a;
+    stroke: #c0405a;
+}
+
+.like-button:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.like-login {
+    font-size: 13px;
+}
+
+.popular-item {
+    display: block;
+    margin-bottom: 16px;
+    text-decoration: none;
+}
+
+.popular-item img,
+.popular-empty {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background: #c98c93;
+}
+
+.popular-title {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.popular-likes {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #4a4232;
+}
+
+.popular-likes svg {
+    width: 11px;
+    height: 11px;
+}
+
 .site-footer {
     padding: 16px;
     background: #efe0b7;
