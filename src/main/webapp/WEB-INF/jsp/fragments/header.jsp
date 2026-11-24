@@ -30,7 +30,11 @@
                         <span class="avatar"></span>
                     </c:otherwise>
                 </c:choose>
-                <a class="auth-link" href="<c:url value='/logout'/>">Выйти</a>
+                <form class="logout-form" method="post" action="<c:url value='/logout'/>">
+                    <input type="hidden" name="csrfToken" value="${csrfToken}">
+                    <input type="hidden" name="formToken" value="${formToken}">
+                    <button type="submit">Выйти</button>
+                </form>
             </c:when>
             <c:otherwise>
                 <a class="auth-link" href="<c:url value='/login'/>">Войти</a>

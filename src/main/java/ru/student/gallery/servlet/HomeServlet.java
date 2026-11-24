@@ -5,10 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.model.Artwork;
-import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.GalleryService;
 
@@ -17,6 +15,9 @@ import java.util.List;
 
 @WebServlet("")
 public class HomeServlet extends HttpServlet {
+
+    private static final int PAGE_SIZE = 12;
+
     private ArtworkService artworkService;
     private GalleryService galleryService;
 
@@ -30,25 +31,42 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        SessionUser currentUser = session == null
-                ? null
-                : (SessionUser) session.getAttribute("currentUser");
-
         String query = req.getParameter("q");
         List<Artwork> feed;
+        int page = 1;
+        int pages = 1;
 
         if (query != null && !query.trim().isEmpty()) {
             query = query.trim();
             feed = artworkService.search(query);
             req.setAttribute("searchQuery", query);
         } else {
-            feed = artworkService.getFeed(currentUser, 20);
+            pages = Math.max(1, (artworkService.countPublished() + PAGE_SIZE - 1) / PAGE_SIZE);
+            page = parsePage(req.getParameter("page"), pages);
+            feed = artworkService.getFeed(PAGE_SIZE, (page - 1) * PAGE_SIZE);
         }
 
         req.setAttribute("feed", feed);
+        req.setAttribute("page", page);
+        req.setAttribute("pages", pages);
         req.setAttribute("featuredGalleries", galleryService.getFeaturedGalleries());
         req.setAttribute("popularGalleries", galleryService.getPopularGalleries(5));
+
         req.getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
+    }
+
+    private int parsePage(String value, int pages) {
+        if (value == null) {
+            return 1;
+        }
+        try {
+            int page = Integer.parseInt(value);
+            if (page < 1) {
+                return 1;
+            }
+            return Math.min(page, pages);
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 }

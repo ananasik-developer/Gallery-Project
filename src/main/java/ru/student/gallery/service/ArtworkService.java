@@ -15,8 +15,12 @@ public class ArtworkService {
         this.artworkDao = artworkDao;
     }
 
-    public List<Artwork> getFeed(SessionUser currentUser, int limit) {
-        return artworkDao.findPublished(limit, 0);
+    public List<Artwork> getFeed(int limit, int offset) {
+        return artworkDao.findPublished(limit, offset);
+    }
+
+    public int countPublished() {
+        return artworkDao.countPublished();
     }
 
     public void createArtwork(Artwork artwork, SessionUser author) {

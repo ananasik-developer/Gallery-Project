@@ -63,6 +63,18 @@
                 </a>
             </c:forEach>
         </div>
+
+        <c:if test="${empty searchQuery && pages > 1}">
+            <div class="pager">
+                <c:if test="${page > 1}">
+                    <a href="<c:url value='/?page=${page - 1}'/>">Назад</a>
+                </c:if>
+                <span class="pager-current">Страница ${page} из ${pages}</span>
+                <c:if test="${page < pages}">
+                    <a href="<c:url value='/?page=${page + 1}'/>">Вперёд</a>
+                </c:if>
+            </div>
+        </c:if>
     </main>
 
     <aside class="aside">

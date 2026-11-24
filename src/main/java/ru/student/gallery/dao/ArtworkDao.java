@@ -8,6 +8,7 @@ public interface ArtworkDao {
     void save(Artwork artwork);
     Optional<Artwork> findById(long id);
     List<Artwork> findPublished(int limit, int offset);
+    int countPublished();
     List<Artwork> findByAuthorId(long authorId);
     void update(Artwork artwork);
     void delete(long id);

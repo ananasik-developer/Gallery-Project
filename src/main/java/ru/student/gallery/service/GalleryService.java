@@ -1,5 +1,6 @@
 package ru.student.gallery.service;
 
+import ru.student.gallery.dao.ArtworkDao;
 import ru.student.gallery.dao.GalleryDao;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.Gallery;
@@ -9,9 +10,11 @@ import java.util.List;
 
 public class GalleryService {
     private final GalleryDao galleryDao;
+    private final ArtworkDao artworkDao;
 
-    public GalleryService(GalleryDao galleryDao) {
+    public GalleryService(GalleryDao galleryDao, ArtworkDao artworkDao) {
         this.galleryDao = galleryDao;
+        this.artworkDao = artworkDao;
     }
 
     public void createGallery(Gallery gallery, SessionUser author) {
@@ -63,14 +66,30 @@ public class GalleryService {
     }
 
     public void addArtwork(long galleryId, long artworkId, SessionUser owner) {
-        Gallery g = galleryDao.findById(galleryId)
+        Gallery gallery = galleryDao.findById(galleryId)
                 .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
 
-        if (!g.getAuthorId().equals(owner.getId())) {
+        if (!gallery.getAuthorId().equals(owner.getId())) {
             throw new RuntimeException("Нет прав на редактирование чужой галереи");
         }
 
-        galleryDao.addArtworkToGallery(galleryId, artworkId, 0);
+        Artwork artwork = artworkDao.findById(artworkId)
+                .orElseThrow(() -> new IllegalArgumentException("Работа не найдена"));
+
+        if (!artwork.getAuthorId().equals(owner.getId())) {
+            throw new RuntimeException("В галерею можно добавлять только свои работы");
+        }
+
+        if (!"PUBLISHED".equals(artwork.getStatus())) {
+            throw new RuntimeException("Сначала опубликуйте работу");
+        }
+
+        if (galleryDao.containsArtwork(galleryId, artworkId)) {
+            throw new RuntimeException("Эта работа уже есть в галерее");
+        }
+
+        int order = galleryDao.getGalleryArtworks(galleryId).size();
+        galleryDao.addArtworkToGallery(galleryId, artworkId, order);
     }
 
     public Gallery findById(long id) {

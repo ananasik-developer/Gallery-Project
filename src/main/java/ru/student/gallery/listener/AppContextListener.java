@@ -34,7 +34,7 @@ public class AppContextListener implements ServletContextListener {
         ArtworkService artworkService = new ArtworkService(artworkDao);
 
         GalleryDao galleryDao = new JdbcGalleryDao();
-        GalleryService galleryService = new GalleryService(galleryDao);
+        GalleryService galleryService = new GalleryService(galleryDao, artworkDao);
 
         LikeDao likeDao = new JdbcLikeDao();
         LikeService likeService = new LikeService(likeDao);

@@ -67,6 +67,18 @@ public class JdbcArtworkDao implements ArtworkDao {
     }
 
     @Override
+    public int countPublished() {
+        String sql = "SELECT COUNT(*) FROM artworks WHERE status = 'PUBLISHED'";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getInt(1) : 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<Artwork> findByAuthorId(long authorId) {
         String sql = "SELECT a.*, u.username as author_username FROM artworks a " +
                 "JOIN users u ON a.author_id = u.id " +

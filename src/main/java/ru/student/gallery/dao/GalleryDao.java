@@ -14,6 +14,8 @@ public interface GalleryDao {
 
     List<Artwork> getGalleryArtworks(long galleryId);
 
+    boolean containsArtwork(long galleryId, long artworkId);
+
     List<Gallery> findAvailableForCommission();
 
     List<Gallery> findFeatured();

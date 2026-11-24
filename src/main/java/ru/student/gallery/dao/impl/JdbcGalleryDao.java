@@ -124,6 +124,21 @@ public class JdbcGalleryDao implements GalleryDao {
     }
 
     @Override
+    public boolean containsArtwork(long galleryId, long artworkId) {
+        String sql = "SELECT 1 FROM gallery_artworks WHERE gallery_id = ? AND artwork_id = ?";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, galleryId);
+            ps.setLong(2, artworkId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<Gallery> findAvailableForCommission() {
         String sql = "SELECT g.*, u.username as author_username FROM galleries g " +
                 "JOIN users u ON g.author_id = u.id " +

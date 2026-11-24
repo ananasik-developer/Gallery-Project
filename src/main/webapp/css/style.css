@@ -81,6 +81,24 @@ a {
     font-size: 14px;
 }
 
+.logout-form {
+    margin-left: 12px;
+}
+
+.logout-form button {
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: inherit;
+    font-size: 14px;
+    color: inherit;
+    cursor: pointer;
+}
+
+.logout-form button:hover {
+    text-decoration: underline;
+}
+
 .user-box .action-link {
     font-size: 13px;
     color: #4a4232;
@@ -671,6 +689,18 @@ a {
 .inline-form button.danger:hover,
 .form button.danger:hover {
     background: #ecd0d0;
+}
+
+.pager {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 26px;
+    font-size: 13px;
+}
+
+.pager-current {
+    color: #4a4232;
 }
 
 .site-footer {
