@@ -50,9 +50,10 @@
                     <a href="<c:url value='/gallery/${g.id}'/>"><c:out value="${g.title}"/></a>
 
                     <c:if test="${isOwner}">
-                        <form method="post" action="<c:url value='/gallery/featured'/>">
+                        <form method="post" action="<c:url value='/gallery/publication'/>">
                             <input type="hidden" name="galleryId" value="${g.id}">
                             <input type="hidden" name="back" value="profile">
+                            <input type="hidden" name="available" value="${g.availableForCommission}">
                             <c:choose>
                                 <c:when test="${g.featured}">
                                     <input type="hidden" name="featured" value="false">
@@ -65,9 +66,10 @@
                             </c:choose>
                         </form>
 
-                        <form method="post" action="<c:url value='/gallery/commission'/>">
+                        <form method="post" action="<c:url value='/gallery/publication'/>">
                             <input type="hidden" name="galleryId" value="${g.id}">
                             <input type="hidden" name="back" value="profile">
+                            <input type="hidden" name="featured" value="${g.featured}">
                             <c:choose>
                                 <c:when test="${g.availableForCommission}">
                                     <input type="hidden" name="available" value="false">

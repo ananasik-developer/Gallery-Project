@@ -73,4 +73,42 @@ public class ArtworkService {
         }
         return artworkDao.searchByTitle(query);
     }
+
+    public Artwork updateArtwork(long artworkId, String title, String description, SessionUser currentUser) {
+        Artwork art = artworkDao.findById(artworkId)
+                .orElseThrow(() -> new RuntimeException("Работа не найдена"));
+
+        if (!art.getAuthorId().equals(currentUser.getId())) {
+            throw new RuntimeException("Нет прав на редактирование чужой работы");
+        }
+
+        String newTitle = title == null ? "" : title.trim();
+        if (newTitle.isEmpty()) {
+            throw new IllegalArgumentException("Название работы обязательно");
+        }
+        if (newTitle.length() > 128) {
+            throw new IllegalArgumentException("Название: максимум 128 символов");
+        }
+
+        String newDescription = description == null ? "" : description.trim();
+        if (newDescription.length() > 2000) {
+            throw new IllegalArgumentException("Описание: максимум 2000 символов");
+        }
+
+        art.setTitle(newTitle);
+        art.setDescription(newDescription.isEmpty() ? null : newDescription);
+        artworkDao.update(art);
+        return art;
+    }
+
+    public void deleteArtwork(long artworkId, SessionUser currentUser) {
+        Artwork art = artworkDao.findById(artworkId)
+                .orElseThrow(() -> new RuntimeException("Работа не найдена"));
+
+        if (!art.getAuthorId().equals(currentUser.getId())) {
+            throw new RuntimeException("Нет прав на удаление чужой работы");
+        }
+
+        artworkDao.delete(artworkId);
+    }
 }

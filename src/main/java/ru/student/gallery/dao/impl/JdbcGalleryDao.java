@@ -141,12 +141,13 @@ public class JdbcGalleryDao implements GalleryDao {
     }
 
     @Override
-    public void setCommission(long galleryId, boolean available) {
-        String sql = "UPDATE galleries SET available_for_commission = ? WHERE id = ?";
+    public void setPublication(long galleryId, boolean featured, boolean available) {
+        String sql = "UPDATE galleries SET featured = ?, available_for_commission = ? WHERE id = ?";
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setBoolean(1, available);
-            ps.setLong(2, galleryId);
+            ps.setBoolean(1, featured);
+            ps.setBoolean(2, available);
+            ps.setLong(3, galleryId);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -168,19 +169,6 @@ public class JdbcGalleryDao implements GalleryDao {
             throw new RuntimeException(e);
         }
         return list;
-    }
-
-    @Override
-    public void setFeatured(long galleryId, boolean featured) {
-        String sql = "UPDATE galleries SET featured = ? WHERE id = ?";
-        try (Connection conn = DbConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setBoolean(1, featured);
-            ps.setLong(2, galleryId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -210,6 +198,18 @@ public class JdbcGalleryDao implements GalleryDao {
             throw new RuntimeException(e);
         }
         return list;
+    }
+
+    @Override
+    public void delete(long galleryId) {
+        String sql = "DELETE FROM galleries WHERE id = ?";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, galleryId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Gallery mapRow(ResultSet rs) throws SQLException {

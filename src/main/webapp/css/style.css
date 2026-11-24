@@ -651,6 +651,28 @@ a {
     height: 11px;
 }
 
+.action-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.action-row .inline-form {
+    margin-bottom: 0;
+}
+
+.inline-form button.danger,
+.form button.danger {
+    border-color: #b05a5a;
+    background: #f3dede;
+}
+
+.inline-form button.danger:hover,
+.form button.danger:hover {
+    background: #ecd0d0;
+}
+
 .site-footer {
     padding: 16px;
     background: #efe0b7;

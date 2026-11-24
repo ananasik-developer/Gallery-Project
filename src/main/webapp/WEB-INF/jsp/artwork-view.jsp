@@ -49,6 +49,16 @@
                 </form>
             </c:if>
 
+            <c:if test="${isOwner}">
+                <div class="action-row">
+                    <a class="cancel" href="<c:url value='/artwork/edit/${artwork.id}'/>">Редактировать</a>
+                    <form class="inline-form" method="post" action="<c:url value='/artwork/delete/${artwork.id}'/>"
+                          onsubmit="return confirm('Удалить работу? Действие необратимо.');">
+                        <button type="submit" class="danger">Удалить</button>
+                    </form>
+                </div>
+            </c:if>
+
             <a class="cancel" href="<c:url value='/'/>">На главную</a>
         </div>
     </main>

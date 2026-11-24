@@ -36,7 +36,7 @@ public class GalleryService {
         return fillArtworks(galleryDao.findFeatured());
     }
 
-    public void setCommission(long galleryId, boolean available, SessionUser owner) {
+    public void setPublication(long galleryId, boolean featured, boolean available, SessionUser owner) {
         Gallery gallery = galleryDao.findById(galleryId)
                 .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
 
@@ -44,18 +44,7 @@ public class GalleryService {
             throw new RuntimeException("Нет прав на изменение чужой галереи");
         }
 
-        galleryDao.setCommission(galleryId, available);
-    }
-
-    public void setFeatured(long galleryId, boolean featured, SessionUser owner) {
-        Gallery gallery = galleryDao.findById(galleryId)
-                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
-
-        if (!gallery.getAuthorId().equals(owner.getId())) {
-            throw new RuntimeException("Нет прав на изменение чужой галереи");
-        }
-
-        galleryDao.setFeatured(galleryId, featured);
+        galleryDao.setPublication(galleryId, featured, available);
     }
 
     private List<Gallery> fillArtworks(List<Gallery> galleries) {
@@ -87,5 +76,16 @@ public class GalleryService {
     public Gallery findById(long id) {
         return galleryDao.findById(id)
                 .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
+    }
+
+    public void deleteGallery(long galleryId, SessionUser owner) {
+        Gallery gallery = galleryDao.findById(galleryId)
+                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
+
+        if (!gallery.getAuthorId().equals(owner.getId())) {
+            throw new RuntimeException("Нет прав на удаление чужой галереи");
+        }
+
+        galleryDao.delete(galleryId);
     }
 }

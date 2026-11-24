@@ -12,8 +12,8 @@ import ru.student.gallery.service.GalleryService;
 
 import java.io.IOException;
 
-@WebServlet("/gallery/featured")
-public class GalleryFeaturedServlet extends HttpServlet {
+@WebServlet("/gallery/publication")
+public class GalleryPublicationServlet extends HttpServlet {
 
     private GalleryService galleryService;
 
@@ -45,9 +45,10 @@ public class GalleryFeaturedServlet extends HttpServlet {
         }
 
         boolean featured = Boolean.parseBoolean(req.getParameter("featured"));
+        boolean available = Boolean.parseBoolean(req.getParameter("available"));
 
         try {
-            galleryService.setFeatured(galleryId, featured, currentUser);
+            galleryService.setPublication(galleryId, featured, available, currentUser);
         } catch (RuntimeException e) {
             resp.sendError(403, e.getMessage());
             return;

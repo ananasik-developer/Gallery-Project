@@ -12,8 +12,8 @@ import ru.student.gallery.service.GalleryService;
 
 import java.io.IOException;
 
-@WebServlet("/gallery/commission")
-public class GalleryCommissionServlet extends HttpServlet {
+@WebServlet("/gallery/delete/*")
+public class GalleryDeleteServlet extends HttpServlet {
 
     private GalleryService galleryService;
 
@@ -36,28 +36,25 @@ public class GalleryCommissionServlet extends HttpServlet {
             return;
         }
 
+        String pathInfo = req.getPathInfo();
+        if (pathInfo == null || pathInfo.length() <= 1) {
+            resp.sendError(404, "ID галереи не указан");
+            return;
+        }
+
         long galleryId;
         try {
-            galleryId = Long.parseLong(req.getParameter("galleryId"));
+            galleryId = Long.parseLong(pathInfo.substring(1));
         } catch (NumberFormatException e) {
             resp.sendError(404, "Некорректный ID галереи");
             return;
         }
 
-        boolean available = Boolean.parseBoolean(req.getParameter("available"));
-
         try {
-            galleryService.setCommission(galleryId, available, currentUser);
+            galleryService.deleteGallery(galleryId, currentUser);
+            resp.sendRedirect(req.getContextPath() + "/profile");
         } catch (RuntimeException e) {
             resp.sendError(403, e.getMessage());
-            return;
-        }
-
-        String back = req.getParameter("back");
-        if ("profile".equals(back)) {
-            resp.sendRedirect(req.getContextPath() + "/profile");
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/gallery/" + galleryId);
         }
     }
 }

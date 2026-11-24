@@ -23,8 +23,9 @@
             </p>
 
             <div class="publication-actions">
-                <form class="inline-form" method="post" action="<c:url value='/gallery/featured'/>">
+                <form class="inline-form" method="post" action="<c:url value='/gallery/publication'/>">
                     <input type="hidden" name="galleryId" value="${gallery.id}">
+                    <input type="hidden" name="available" value="${gallery.availableForCommission}">
                     <c:choose>
                         <c:when test="${gallery.featured}">
                             <input type="hidden" name="featured" value="false">
@@ -37,8 +38,9 @@
                     </c:choose>
                 </form>
 
-                <form class="inline-form" method="post" action="<c:url value='/gallery/commission'/>">
+                <form class="inline-form" method="post" action="<c:url value='/gallery/publication'/>">
                     <input type="hidden" name="galleryId" value="${gallery.id}">
+                    <input type="hidden" name="featured" value="${gallery.featured}">
                     <c:choose>
                         <c:when test="${gallery.availableForCommission}">
                             <input type="hidden" name="available" value="false">
@@ -49,6 +51,11 @@
                             <button type="submit">В поиск исполнителя</button>
                         </c:otherwise>
                     </c:choose>
+                </form>
+
+                <form class="inline-form" method="post" action="<c:url value='/gallery/delete/${gallery.id}'/>"
+                      onsubmit="return confirm('Удалить галерею? Работы останутся, удалится только подборка.');">
+                    <button type="submit" class="danger">Удалить галерею</button>
                 </form>
             </div>
         </c:if>

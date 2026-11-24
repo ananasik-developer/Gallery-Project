@@ -15,10 +15,12 @@ public interface GalleryDao {
     List<Artwork> getGalleryArtworks(long galleryId);
 
     List<Gallery> findAvailableForCommission();
-    void setCommission(long galleryId, boolean available);
 
     List<Gallery> findFeatured();
-    void setFeatured(long galleryId, boolean featured);
 
     List<Gallery> findPopular(int limit);
+
+    void setPublication(long galleryId, boolean featured, boolean available);
+
+    void delete(long galleryId);
 }
