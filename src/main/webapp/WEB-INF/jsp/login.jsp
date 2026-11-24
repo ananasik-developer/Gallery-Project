@@ -16,6 +16,8 @@
         </c:if>
 
         <form class="form" method="post" action="<c:url value='/login'/>">
+            <input type="hidden" name="csrfToken" value="${csrfToken}">
+            <input type="hidden" name="formToken" value="${formToken}">
             <label>Логин
                 <input type="text" name="username" value="<c:out value='${username}'/>" required autofocus>
             </label>

@@ -8,11 +8,15 @@
 
     button.addEventListener('click', function () {
         var artworkId = button.getAttribute('data-artwork');
+        var token = button.getAttribute('data-token');
         var url = button.getAttribute('data-url');
 
-        fetch(url + '?artworkId=' + encodeURIComponent(artworkId), {
+        button.disabled = true;
+
+        fetch(url, {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'artworkId=' + encodeURIComponent(artworkId) + '&csrfToken=' + encodeURIComponent(token)
         })
             .then(function (response) {
                 if (!response.ok) {
@@ -27,9 +31,10 @@
                 } else {
                     button.classList.remove('active');
                 }
+                button.disabled = false;
             })
             .catch(function () {
-                button.disabled = true;
+                button.disabled = false;
             });
     });
 })();

@@ -20,6 +20,8 @@
 
         <c:if test="${not empty userArtworks}">
             <form class="form" method="post" action="<c:url value='/gallery-manage/add-artwork'/>">
+                <input type="hidden" name="csrfToken" value="${csrfToken}">
+                <input type="hidden" name="formToken" value="${formToken}">
                 <input type="hidden" name="galleryId" value="${galleryId}">
                 <label>Работа
                     <select name="artworkId" required>

@@ -13,6 +13,8 @@
         </c:if>
 
         <form class="form" method="post" action="<c:url value='/profile/edit'/>" enctype="multipart/form-data">
+            <input type="hidden" name="csrfToken" value="${csrfToken}">
+            <input type="hidden" name="formToken" value="${formToken}">
             <label>Логин
                 <input type="text" name="username" value="<c:out value='${profileUser.username}'/>" minlength="3" maxlength="50" required>
             </label>

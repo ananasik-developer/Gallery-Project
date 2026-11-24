@@ -32,6 +32,7 @@
                     <c:otherwise>
                         <button type="button" class="like-button ${liked ? 'active' : ''}"
                                 data-artwork="${artwork.id}"
+                                data-token="${csrfToken}"
                                 data-url="<c:url value='/like'/>">
                             <svg class="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 20.5c-1-0.7-6.4-4.2-8.2-7.1C2.1 10.6 3.2 7 6.4 6c2-0.6 3.9 0.3 5 1.9 1.1-1.6 3-2.5 5-1.9 3.2 1 4.3 4.6 2.6 7.4-1.8 2.9-7.2 6.4-8.2 7.1z"/>
@@ -44,6 +45,8 @@
 
             <c:if test="${isOwner && artwork.status == 'DRAFT'}">
                 <form class="inline-form" method="post" action="<c:url value='/artwork/publish'/>">
+                    <input type="hidden" name="csrfToken" value="${csrfToken}">
+                    <input type="hidden" name="formToken" value="${formToken}">
                     <input type="hidden" name="artworkId" value="${artwork.id}">
                     <button type="submit">Опубликовать работу</button>
                 </form>
@@ -54,6 +57,8 @@
                     <a class="cancel" href="<c:url value='/artwork/edit/${artwork.id}'/>">Редактировать</a>
                     <form class="inline-form" method="post" action="<c:url value='/artwork/delete/${artwork.id}'/>"
                           onsubmit="return confirm('Удалить работу? Действие необратимо.');">
+                        <input type="hidden" name="csrfToken" value="${csrfToken}">
+                        <input type="hidden" name="formToken" value="${formToken}">
                         <button type="submit" class="danger">Удалить</button>
                     </form>
                 </div>

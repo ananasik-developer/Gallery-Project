@@ -12,6 +12,8 @@
         </c:if>
 
         <form class="form" method="post" action="<c:url value='/register'/>">
+            <input type="hidden" name="csrfToken" value="${csrfToken}">
+            <input type="hidden" name="formToken" value="${formToken}">
             <label>Логин, минимум 3 символа
                 <input type="text" name="username" value="<c:out value='${username}'/>" minlength="3" required>
             </label>

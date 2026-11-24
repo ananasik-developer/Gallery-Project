@@ -24,6 +24,8 @@
 
             <div class="publication-actions">
                 <form class="inline-form" method="post" action="<c:url value='/gallery/publication'/>">
+                    <input type="hidden" name="csrfToken" value="${csrfToken}">
+                    <input type="hidden" name="formToken" value="${formToken}">
                     <input type="hidden" name="galleryId" value="${gallery.id}">
                     <input type="hidden" name="available" value="${gallery.availableForCommission}">
                     <c:choose>
@@ -39,6 +41,8 @@
                 </form>
 
                 <form class="inline-form" method="post" action="<c:url value='/gallery/publication'/>">
+                    <input type="hidden" name="csrfToken" value="${csrfToken}">
+                    <input type="hidden" name="formToken" value="${formToken}">
                     <input type="hidden" name="galleryId" value="${gallery.id}">
                     <input type="hidden" name="featured" value="${gallery.featured}">
                     <c:choose>
@@ -55,6 +59,8 @@
 
                 <form class="inline-form" method="post" action="<c:url value='/gallery/delete/${gallery.id}'/>"
                       onsubmit="return confirm('Удалить галерею? Работы останутся, удалится только подборка.');">
+                    <input type="hidden" name="csrfToken" value="${csrfToken}">
+                    <input type="hidden" name="formToken" value="${formToken}">
                     <button type="submit" class="danger">Удалить галерею</button>
                 </form>
             </div>

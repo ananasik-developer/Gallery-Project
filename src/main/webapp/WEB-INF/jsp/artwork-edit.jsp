@@ -13,6 +13,8 @@
         </c:if>
 
         <form class="form" method="post" action="<c:url value='/artwork/edit/${artwork.id}'/>">
+            <input type="hidden" name="csrfToken" value="${csrfToken}">
+            <input type="hidden" name="formToken" value="${formToken}">
             <label>Название
                 <input type="text" name="title" value="<c:out value='${artwork.title}'/>" required maxlength="128">
             </label>

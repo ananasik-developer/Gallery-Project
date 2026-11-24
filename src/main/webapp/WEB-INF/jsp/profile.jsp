@@ -51,6 +51,8 @@
 
                     <c:if test="${isOwner}">
                         <form method="post" action="<c:url value='/gallery/publication'/>">
+                            <input type="hidden" name="csrfToken" value="${csrfToken}">
+                            <input type="hidden" name="formToken" value="${formToken}">
                             <input type="hidden" name="galleryId" value="${g.id}">
                             <input type="hidden" name="back" value="profile">
                             <input type="hidden" name="available" value="${g.availableForCommission}">
@@ -67,6 +69,8 @@
                         </form>
 
                         <form method="post" action="<c:url value='/gallery/publication'/>">
+                            <input type="hidden" name="csrfToken" value="${csrfToken}">
+                            <input type="hidden" name="formToken" value="${formToken}">
                             <input type="hidden" name="galleryId" value="${g.id}">
                             <input type="hidden" name="back" value="profile">
                             <input type="hidden" name="featured" value="${g.featured}">
@@ -113,6 +117,8 @@
                         <img src="<c:url value='${art.imagePath}'/>" alt="<c:out value='${art.title}'/>">
                         <span class="draft-title"><c:out value="${art.title}"/></span>
                         <form method="post" action="<c:url value='/artwork/publish'/>">
+                            <input type="hidden" name="csrfToken" value="${csrfToken}">
+                            <input type="hidden" name="formToken" value="${formToken}">
                             <input type="hidden" name="artworkId" value="${art.id}">
                             <button type="submit">Опубликовать</button>
                         </form>

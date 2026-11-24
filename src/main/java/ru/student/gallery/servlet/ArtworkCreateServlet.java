@@ -8,6 +8,7 @@ import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
+import ru.student.gallery.util.Tokens;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +53,11 @@ public class ArtworkCreateServlet extends HttpServlet {
 
         if (currentUser == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        if (!Tokens.accept(req, session, true)) {
+            resp.sendError(403, "Форма устарела, обновите страницу и попробуйте снова");
             return;
         }
 
