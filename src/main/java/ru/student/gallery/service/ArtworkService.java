@@ -44,7 +44,7 @@ public class ArtworkService {
 
     public Artwork getArtworkById(long id, SessionUser currentUser) {
         Artwork art = artworkDao.findById(id)
-                .orElseThrow(() -> new RuntimeException("Работа не найдена"));
+                .orElseThrow(() -> new IllegalArgumentException("Работа не найдена"));
 
         if ("DRAFT".equals(art.getStatus())) {
             if (currentUser == null || !art.getAuthorId().equals(currentUser.getId())) {

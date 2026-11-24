@@ -18,8 +18,12 @@ import ru.student.gallery.service.GalleryService;
 import ru.student.gallery.service.LikeService;
 import ru.student.gallery.service.UserService;
 
+import java.util.logging.Logger;
+
 @WebListener
 public class AppContextListener implements ServletContextListener {
+
+    private static final Logger LOG = Logger.getLogger(AppContextListener.class.getName());
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -43,9 +47,12 @@ public class AppContextListener implements ServletContextListener {
 
         ServletContext ctx = sce.getServletContext();
         ctx.setAttribute("serviceRegistry", registry);
+
+        LOG.info("Приложение запущено, сервисы собраны: " + ctx.getContextPath());
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
+        LOG.info("Приложение остановлено");
     }
 }

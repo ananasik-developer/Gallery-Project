@@ -56,6 +56,8 @@ public class ArtworkViewServlet extends HttpServlet {
             req.setAttribute("liked", currentUser != null
                     && likeService.isLikedBy(currentUser.getId(), artworkId));
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-view.jsp").forward(req, resp);
+        } catch (IllegalArgumentException e) {
+            resp.sendError(404, e.getMessage());
         } catch (RuntimeException e) {
             resp.sendError(403, e.getMessage());
         }
