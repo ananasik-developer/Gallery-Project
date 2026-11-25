@@ -20,7 +20,7 @@ public class JdbcTagDao implements TagDao {
         String sql = "SELECT t.id, t.name, t.category, COUNT(at.artwork_id) AS usage_count " +
                 "FROM tags t LEFT JOIN artwork_tags at ON at.tag_id = t.id " +
                 "GROUP BY t.id, t.name, t.category " +
-                "ORDER BY t.category, t.name";
+                "ORDER BY t.category, usage_count DESC, t.name";
         List<Tag> list = new ArrayList<>();
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);

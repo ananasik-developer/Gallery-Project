@@ -43,7 +43,7 @@ public class ArtworkCreateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        showForm(req, resp, List.of(), null);
+        showForm(req, resp, List.of(), null, "GENERAL");
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ArtworkCreateServlet extends HttpServlet {
 
             artworkService.createArtwork(artwork, currentUser);
             tagService.save(artwork.getId(), req.getParameterValues("tagIds"),
-                    req.getParameter("customTags"));
+                    req.getParameter("customTags"), req.getParameter("customCategory"));
 
             resp.sendRedirect(req.getContextPath() + "/artwork/" + artwork.getId());
 
@@ -95,22 +95,25 @@ public class ArtworkCreateServlet extends HttpServlet {
             req.setAttribute("title", title);
             req.setAttribute("description", description);
             showForm(req, resp, tagService.parseIds(req.getParameterValues("tagIds")),
-                    req.getParameter("customTags"));
+                    req.getParameter("customTags"),
+                    tagService.normalizeCategory(req.getParameter("customCategory")));
         } catch (Exception e) {
             req.setAttribute("error", "Ошибка загрузки файла: " + e.getMessage());
             req.setAttribute("title", title);
             req.setAttribute("description", description);
             showForm(req, resp, tagService.parseIds(req.getParameterValues("tagIds")),
-                    req.getParameter("customTags"));
+                    req.getParameter("customTags"),
+                    tagService.normalizeCategory(req.getParameter("customCategory")));
         }
     }
 
     private void showForm(HttpServletRequest req, HttpServletResponse resp,
-                          List<Long> selectedTagIds, String customTags)
+                          List<Long> selectedTagIds, String customTags, String customCategory)
             throws ServletException, IOException {
         req.setAttribute("allTags", tagService.findAll());
         req.setAttribute("selectedTagIds", selectedTagIds);
         req.setAttribute("customTags", customTags);
+        req.setAttribute("customCategory", customCategory);
         req.getRequestDispatcher("/WEB-INF/jsp/artwork-create.jsp").forward(req, resp);
     }
 }

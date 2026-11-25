@@ -101,16 +101,24 @@ public class TagService {
         return names;
     }
 
-    public void save(long artworkId, String[] tagIds, String customTags) {
+    public String normalizeCategory(String category) {
+        if ("META".equals(category) || "CHARACTER".equals(category) || "GENERAL".equals(category)) {
+            return category;
+        }
+        return "GENERAL";
+    }
+
+    public void save(long artworkId, String[] tagIds, String customTags, String customCategory) {
         List<Long> ids = parseIds(tagIds);
         List<String> names = parseNames(customTags);
+        String category = normalizeCategory(customCategory);
 
         if (ids.size() + names.size() > MAX_TAGS) {
             throw new IllegalArgumentException("Можно выбрать не больше десяти тегов");
         }
 
         for (String name : names) {
-            ids.add(findOrCreate(name));
+            ids.add(findOrCreate(name, category));
         }
 
         List<Long> unique = new ArrayList<>();
@@ -129,7 +137,7 @@ public class TagService {
         tagDao.setArtworkTags(artworkId, unique);
     }
 
-    private long findOrCreate(String name) {
+    private long findOrCreate(String name, String category) {
         Optional<Tag> existing = tagDao.findByName(name);
         if (existing.isPresent()) {
             return existing.get().getId();
@@ -137,7 +145,7 @@ public class TagService {
 
         Tag tag = new Tag();
         tag.setName(name);
-        tag.setCategory("GENERAL");
+        tag.setCategory(category);
         tagDao.save(tag);
         return tag.getId();
     }

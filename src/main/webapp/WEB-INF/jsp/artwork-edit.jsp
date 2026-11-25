@@ -35,6 +35,15 @@
                     Свои теги через запятую
                     <input type="text" name="customTags" value="<c:out value='${customTags}'/>" maxlength="200" placeholder="autumn, sketch">
                 </label>
+
+                <label class="tag-custom">
+                    Группа для новых тегов
+                    <select name="customCategory">
+                        <option value="GENERAL" ${customCategory == 'GENERAL' ? 'selected' : ''}>General</option>
+                        <option value="META" ${customCategory == 'META' ? 'selected' : ''}>Meta</option>
+                        <option value="CHARACTER" ${customCategory == 'CHARACTER' ? 'selected' : ''}>Characters</option>
+                    </select>
+                </label>
             </div>
 
             <button type="submit">Сохранить</button>
