@@ -23,6 +23,10 @@ public class ArtworkService {
         return artworkDao.countPublished();
     }
 
+    public List<Artwork> getByTag(long tagId, int limit) {
+        return artworkDao.findPublishedByTag(tagId, limit);
+    }
+
     public void createArtwork(Artwork artwork, SessionUser author) {
         artwork.setAuthorId(author.getId());
         artwork.setStatus("DRAFT");

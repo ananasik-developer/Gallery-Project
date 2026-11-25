@@ -24,6 +24,14 @@
 
             <p class="artwork-description"><c:out value="${artwork.description}"/></p>
 
+            <c:if test="${not empty artworkTags}">
+                <p class="artwork-tags">
+                    <c:forEach var="t" items="${artworkTags}">
+                        <a class="tag-chip" href="<c:url value='/?tag=${t.id}'/>"><c:out value="${t.name}"/></a>
+                    </c:forEach>
+                </p>
+            </c:if>
+
             <div class="like-row">
                 <c:choose>
                     <c:when test="${empty currentUser}">

@@ -10,6 +10,7 @@ public interface ArtworkDao {
     List<Artwork> findPublished(int limit, int offset);
     int countPublished();
     List<Artwork> findByAuthorId(long authorId);
+    List<Artwork> findPublishedByTag(long tagId, int limit);
     void update(Artwork artwork);
     void delete(long id);
     List<Artwork> searchByTitle(String query);

@@ -21,6 +21,17 @@
             <label>Описание
                 <textarea name="description" rows="5" maxlength="2000"><c:out value="${artwork.description}"/></textarea>
             </label>
+
+            <div class="tag-picker">
+                <span class="tag-picker-label">Теги, не больше десяти</span>
+                <c:forEach var="t" items="${allTags}">
+                    <label class="tag-check">
+                        <input type="checkbox" name="tagIds" value="${t.id}" ${selectedTagIds.contains(t.id) ? 'checked' : ''}>
+                        <c:out value="${t.name}"/>
+                    </label>
+                </c:forEach>
+            </div>
+
             <button type="submit">Сохранить</button>
             <a class="cancel" href="<c:url value='/artwork/${artwork.id}'/>">Отмена</a>
         </form>

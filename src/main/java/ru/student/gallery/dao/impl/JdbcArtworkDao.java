@@ -98,6 +98,27 @@ public class JdbcArtworkDao implements ArtworkDao {
     }
 
     @Override
+    public List<Artwork> findPublishedByTag(long tagId, int limit) {
+        String sql = "SELECT a.*, u.username as author_username FROM artworks a " +
+                "JOIN users u ON a.author_id = u.id " +
+                "JOIN artwork_tags at ON at.artwork_id = a.id " +
+                "WHERE a.status = 'PUBLISHED' AND at.tag_id = ? " +
+                "ORDER BY a.created_at DESC LIMIT ?";
+        List<Artwork> list = new ArrayList<>();
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, tagId);
+            ps.setInt(2, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
+    @Override
     public void update(Artwork art) {
         String sql = "UPDATE artworks SET title=?, description=?, image_path=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?";
         try (Connection conn = DbConfig.getConnection();

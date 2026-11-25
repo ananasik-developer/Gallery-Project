@@ -8,12 +8,14 @@ import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
+import ru.student.gallery.service.TagService;
 import ru.student.gallery.util.Tokens;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 
 @WebServlet("/artwork/create")
 @MultipartConfig(
@@ -24,12 +26,14 @@ import java.time.LocalDate;
 public class ArtworkCreateServlet extends HttpServlet {
 
     private ArtworkService artworkService;
+    private TagService tagService;
     private String uploadDir;
 
     @Override
     public void init() throws ServletException {
         var registry = (ServiceRegistry) getServletContext().getAttribute("serviceRegistry");
         artworkService = registry.getService("artworkService", ArtworkService.class);
+        tagService = registry.getService("tagService", TagService.class);
 
         uploadDir = getServletContext().getRealPath("/uploads/artworks");
         File dir = new File(uploadDir);
@@ -39,7 +43,7 @@ public class ArtworkCreateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/jsp/artwork-create.jsp").forward(req, resp);
+        showForm(req, resp, List.of());
     }
 
     @Override
@@ -81,6 +85,7 @@ public class ArtworkCreateServlet extends HttpServlet {
             artwork.setImagePath("/uploads/artworks/" + fileName);
 
             artworkService.createArtwork(artwork, currentUser);
+            tagService.save(artwork.getId(), req.getParameterValues("tagIds"));
 
             resp.sendRedirect(req.getContextPath() + "/artwork/" + artwork.getId());
 
@@ -88,10 +93,20 @@ public class ArtworkCreateServlet extends HttpServlet {
             req.setAttribute("error", e.getMessage());
             req.setAttribute("title", title);
             req.setAttribute("description", description);
-            req.getRequestDispatcher("/WEB-INF/jsp/artwork-create.jsp").forward(req, resp);
+            showForm(req, resp, tagService.parseIds(req.getParameterValues("tagIds")));
         } catch (Exception e) {
             req.setAttribute("error", "Ошибка загрузки файла: " + e.getMessage());
-            req.getRequestDispatcher("/WEB-INF/jsp/artwork-create.jsp").forward(req, resp);
+            req.setAttribute("title", title);
+            req.setAttribute("description", description);
+            showForm(req, resp, tagService.parseIds(req.getParameterValues("tagIds")));
         }
+    }
+
+    private void showForm(HttpServletRequest req, HttpServletResponse resp,
+                          List<Long> selectedTagIds)
+            throws ServletException, IOException {
+        req.setAttribute("allTags", tagService.findAll());
+        req.setAttribute("selectedTagIds", selectedTagIds);
+        req.getRequestDispatcher("/WEB-INF/jsp/artwork-create.jsp").forward(req, resp);
     }
 }

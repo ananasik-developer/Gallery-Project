@@ -11,6 +11,7 @@ import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.LikeService;
+import ru.student.gallery.service.TagService;
 
 import java.io.IOException;
 
@@ -18,12 +19,14 @@ import java.io.IOException;
 public class ArtworkViewServlet extends HttpServlet {
     private ArtworkService artworkService;
     private LikeService likeService;
+    private TagService tagService;
 
     @Override
     public void init() throws ServletException {
         var registry = (ServiceRegistry) getServletContext().getAttribute("serviceRegistry");
         artworkService = registry.getService("artworkService", ArtworkService.class);
         likeService = registry.getService("likeService", LikeService.class);
+        tagService = registry.getService("tagService", TagService.class);
     }
 
     @Override
@@ -53,6 +56,7 @@ public class ArtworkViewServlet extends HttpServlet {
             req.setAttribute("artwork", art);
             req.setAttribute("isOwner", currentUser != null && art.getAuthorId().equals(currentUser.getId()));
             req.setAttribute("likeCount", likeService.countByArtwork(artworkId));
+            req.setAttribute("artworkTags", tagService.findByArtwork(artworkId));
             req.setAttribute("liked", currentUser != null
                     && likeService.isLikedBy(currentUser.getId(), artworkId));
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-view.jsp").forward(req, resp);

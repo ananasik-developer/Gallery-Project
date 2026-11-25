@@ -6,22 +6,52 @@
 <div class="page">
     <aside class="sidebar">
         <h2>Tags</h2>
-        <p class="empty-note">Пока нет тегов</p>
+
+        <c:if test="${not empty tagGroups['GENERAL']}">
+            <div class="tag-group">
+                <h3>General</h3>
+                <c:forEach var="t" items="${tagGroups['GENERAL']}">
+                    <a class="tag-link ${activeTagId == t.id ? 'active' : ''}" href="<c:url value='/?tag=${t.id}'/>">
+                        <span class="tag-dot"></span><c:out value="${t.name}"/>
+                        <c:if test="${t.usageCount > 0}">
+                            <span class="tag-count">${t.usageCount}</span>
+                        </c:if>
+                    </a>
+                </c:forEach>
+            </div>
+        </c:if>
+
+        <c:if test="${not empty tagGroups['META']}">
+            <div class="tag-group">
+                <h3>Meta</h3>
+                <c:forEach var="t" items="${tagGroups['META']}">
+                    <a class="tag-link ${activeTagId == t.id ? 'active' : ''}" href="<c:url value='/?tag=${t.id}'/>">
+                        <span class="tag-dot"></span><c:out value="${t.name}"/>
+                        <c:if test="${t.usageCount > 0}">
+                            <span class="tag-count">${t.usageCount}</span>
+                        </c:if>
+                    </a>
+                </c:forEach>
+            </div>
+        </c:if>
+
+        <c:if test="${not empty tagGroups['CHARACTER']}">
+            <div class="tag-group">
+                <h3>Characters</h3>
+                <c:forEach var="t" items="${tagGroups['CHARACTER']}">
+                    <a class="tag-link ${activeTagId == t.id ? 'active' : ''}" href="<c:url value='/?tag=${t.id}'/>">
+                        <span class="tag-dot"></span><c:out value="${t.name}"/>
+                        <c:if test="${t.usageCount > 0}">
+                            <span class="tag-count">${t.usageCount}</span>
+                        </c:if>
+                    </a>
+                </c:forEach>
+            </div>
+        </c:if>
     </aside>
 
     <main class="content">
-        <form class="search" method="get" action="<c:url value='/'/>">
-            <div class="search-box">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2">
-                    <circle cx="10" cy="10" r="7"/>
-                    <line x1="15" y1="15" x2="21" y2="21"/>
-                </svg>
-                <input type="text" name="q" value="<c:out value='${param.q}'/>" placeholder="поиск">
-            </div>
-            <button type="submit">поиск</button>
-        </form>
-
-        <c:if test="${empty searchQuery && not empty featuredGalleries}">
+        <c:if test="${empty searchQuery && empty activeTagId && not empty featuredGalleries}">
             <section class="strip">
                 <div class="strip-track" id="galleryStrip">
                     <c:forEach var="g" items="${featuredGalleries}">
@@ -48,8 +78,26 @@
             </section>
         </c:if>
 
+        <form class="search" method="get" action="<c:url value='/'/>">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2">
+                    <circle cx="10" cy="10" r="7"/>
+                    <line x1="15" y1="15" x2="21" y2="21"/>
+                </svg>
+                <input type="text" name="q" value="<c:out value='${param.q}'/>" placeholder="поиск">
+            </div>
+            <button type="submit">поиск</button>
+        </form>
+
         <c:if test="${not empty searchQuery}">
             <p class="search-note">Результаты по запросу «<c:out value="${searchQuery}"/>»</p>
+        </c:if>
+
+        <c:if test="${not empty activeTag}">
+            <p class="search-note">
+                Работы с тегом «<c:out value="${activeTag.name}"/>»
+                <a href="<c:url value='/'/>">сбросить</a>
+            </p>
         </c:if>
 
         <c:if test="${empty feed}">
@@ -64,7 +112,7 @@
             </c:forEach>
         </div>
 
-        <c:if test="${empty searchQuery && pages > 1}">
+        <c:if test="${empty searchQuery && empty activeTagId && pages > 1}">
             <div class="pager">
                 <c:if test="${page > 1}">
                     <a href="<c:url value='/?page=${page - 1}'/>">Назад</a>

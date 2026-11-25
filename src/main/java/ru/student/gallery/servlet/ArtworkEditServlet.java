@@ -10,18 +10,22 @@ import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
+import ru.student.gallery.service.TagService;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/artwork/edit/*")
 public class ArtworkEditServlet extends HttpServlet {
 
     private ArtworkService artworkService;
+    private TagService tagService;
 
     @Override
     public void init() throws ServletException {
         var registry = (ServiceRegistry) getServletContext().getAttribute("serviceRegistry");
         artworkService = registry.getService("artworkService", ArtworkService.class);
+        tagService = registry.getService("tagService", TagService.class);
     }
 
     @Override
@@ -46,6 +50,8 @@ public class ArtworkEditServlet extends HttpServlet {
                 return;
             }
             req.setAttribute("artwork", art);
+            req.setAttribute("allTags", tagService.findAll());
+            req.setAttribute("selectedTagIds", tagService.findIdsByArtwork(artworkId));
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-edit.jsp").forward(req, resp);
         } catch (RuntimeException e) {
             resp.sendError(403, e.getMessage());
@@ -72,13 +78,18 @@ public class ArtworkEditServlet extends HttpServlet {
 
         try {
             Artwork art = artworkService.updateArtwork(artworkId, title, description, currentUser);
+            tagService.save(artworkId, req.getParameterValues("tagIds"));
             resp.sendRedirect(req.getContextPath() + "/artwork/" + art.getId());
         } catch (IllegalArgumentException e) {
             Artwork art = artworkService.getArtworkById(artworkId, currentUser);
             art.setTitle(title);
             art.setDescription(description);
 
+            List<Long> selected = tagService.parseIds(req.getParameterValues("tagIds"));
+
             req.setAttribute("artwork", art);
+            req.setAttribute("allTags", tagService.findAll());
+            req.setAttribute("selectedTagIds", selected);
             req.setAttribute("error", e.getMessage());
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-edit.jsp").forward(req, resp);
         } catch (RuntimeException e) {

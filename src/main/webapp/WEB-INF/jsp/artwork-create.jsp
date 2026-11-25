@@ -24,6 +24,17 @@
             <label>Изображение, JPG или PNG до 10 МБ
                 <input type="file" name="imageFile" accept="image/jpeg,image/png" required>
             </label>
+
+            <div class="tag-picker">
+                <span class="tag-picker-label">Теги, не больше десяти</span>
+                <c:forEach var="t" items="${allTags}">
+                    <label class="tag-check">
+                        <input type="checkbox" name="tagIds" value="${t.id}" ${selectedTagIds.contains(t.id) ? 'checked' : ''}>
+                        <c:out value="${t.name}"/>
+                    </label>
+                </c:forEach>
+            </div>
+
             <button type="submit">Сохранить черновик</button>
             <a class="cancel" href="<c:url value='/'/>">Отмена</a>
         </form>

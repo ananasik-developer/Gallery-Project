@@ -703,6 +703,76 @@ a {
     color: #4a4232;
 }
 
+.tag-group {
+    margin-bottom: 14px;
+}
+
+.tag-group h3 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.tag-link {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.tag-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: #8a7f63;
+}
+
+.tag-link.active {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.tag-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #7fae4a;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.tag-picker {
+    margin-bottom: 18px;
+}
+
+.tag-picker-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #3a3527;
+}
+
+.tag-check {
+    display: inline-block;
+    margin: 0 12px 6px 0;
+    font-size: 13px;
+}
+
+.artwork-tags {
+    margin-bottom: 14px;
+}
+
+.tag-chip {
+    display: inline-block;
+    padding: 2px 9px;
+    margin: 0 6px 6px 0;
+    border: 1px solid #c9b98d;
+    border-radius: 10px;
+    font-size: 12px;
+    text-decoration: none;
+}
+
 .site-footer {
     padding: 16px;
     background: #efe0b7;
