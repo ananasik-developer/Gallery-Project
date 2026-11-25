@@ -759,6 +759,10 @@ a {
     font-size: 13px;
 }
 
+.tag-custom {
+    margin-top: 12px;
+}
+
 .artwork-tags {
     margin-bottom: 14px;
 }

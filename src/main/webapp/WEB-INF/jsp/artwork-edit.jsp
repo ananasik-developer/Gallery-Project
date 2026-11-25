@@ -30,6 +30,11 @@
                         <c:out value="${t.name}"/>
                     </label>
                 </c:forEach>
+
+                <label class="tag-custom">
+                    Свои теги через запятую
+                    <input type="text" name="customTags" value="<c:out value='${customTags}'/>" maxlength="200" placeholder="autumn, sketch">
+                </label>
             </div>
 
             <button type="submit">Сохранить</button>

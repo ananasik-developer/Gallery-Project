@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class TagService {
 
     private static final int MAX_TAGS = 10;
+    private static final int MAX_NAME_LENGTH = 50;
 
     private final TagDao tagDao;
 
@@ -66,19 +68,77 @@ public class TagService {
         return ids;
     }
 
-    public void save(long artworkId, String[] tagIds) {
-        List<Long> ids = parseIds(tagIds);
+    public List<String> parseNames(String raw) {
+        List<String> names = new ArrayList<>();
 
-        if (ids.size() > MAX_TAGS) {
+        if (raw == null) {
+            return names;
+        }
+
+        for (String part : raw.split(",")) {
+            String name = part.trim().replaceAll("\\s+", " ");
+            if (name.isEmpty()) {
+                continue;
+            }
+            if (name.length() > MAX_NAME_LENGTH) {
+                throw new IllegalArgumentException("Название тега длиннее пятидесяти символов");
+            }
+            if (!name.matches("[\\p{L}\\p{N} \\-]+")) {
+                throw new IllegalArgumentException("В теге допустимы буквы, цифры, пробел и дефис");
+            }
+
+            boolean duplicate = false;
+            for (String existing : names) {
+                if (existing.equalsIgnoreCase(name)) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (!duplicate) {
+                names.add(name);
+            }
+        }
+        return names;
+    }
+
+    public void save(long artworkId, String[] tagIds, String customTags) {
+        List<Long> ids = parseIds(tagIds);
+        List<String> names = parseNames(customTags);
+
+        if (ids.size() + names.size() > MAX_TAGS) {
             throw new IllegalArgumentException("Можно выбрать не больше десяти тегов");
+        }
+
+        for (String name : names) {
+            ids.add(findOrCreate(name));
+        }
+
+        List<Long> unique = new ArrayList<>();
+        for (Long id : ids) {
+            if (!unique.contains(id)) {
+                unique.add(id);
+            }
         }
 
         List<Long> known = new ArrayList<>();
         for (Tag tag : tagDao.findAll()) {
             known.add(tag.getId());
         }
-        ids.retainAll(known);
+        unique.retainAll(known);
 
-        tagDao.setArtworkTags(artworkId, ids);
+        tagDao.setArtworkTags(artworkId, unique);
+    }
+
+    private long findOrCreate(String name) {
+        Optional<Tag> existing = tagDao.findByName(name);
+        if (existing.isPresent()) {
+            return existing.get().getId();
+        }
+
+        Tag tag = new Tag();
+        tag.setName(name);
+        tag.setCategory("GENERAL");
+        tagDao.save(tag);
+        return tag.getId();
     }
 }

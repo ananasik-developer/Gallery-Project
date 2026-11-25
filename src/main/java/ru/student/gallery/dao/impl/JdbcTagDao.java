@@ -8,8 +8,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class JdbcTagDao implements TagDao {
 
@@ -60,6 +62,45 @@ public class JdbcTagDao implements TagDao {
             throw new RuntimeException(e);
         }
         return list;
+    }
+
+    @Override
+    public Optional<Tag> findByName(String name) {
+        String sql = "SELECT id, name, category FROM tags WHERE LOWER(name) = LOWER(?) LIMIT 1";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Tag tag = new Tag();
+                    tag.setId(rs.getLong("id"));
+                    tag.setName(rs.getString("name"));
+                    tag.setCategory(rs.getString("category"));
+                    return Optional.of(tag);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public void save(Tag tag) {
+        String sql = "INSERT INTO tags (name, category) VALUES (?, ?)";
+        try (Connection conn = DbConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, tag.getName());
+            ps.setString(2, tag.getCategory());
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    tag.setId(keys.getLong(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

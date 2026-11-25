@@ -43,7 +43,7 @@ public class ArtworkCreateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        showForm(req, resp, List.of());
+        showForm(req, resp, List.of(), null);
     }
 
     @Override
@@ -85,7 +85,8 @@ public class ArtworkCreateServlet extends HttpServlet {
             artwork.setImagePath("/uploads/artworks/" + fileName);
 
             artworkService.createArtwork(artwork, currentUser);
-            tagService.save(artwork.getId(), req.getParameterValues("tagIds"));
+            tagService.save(artwork.getId(), req.getParameterValues("tagIds"),
+                    req.getParameter("customTags"));
 
             resp.sendRedirect(req.getContextPath() + "/artwork/" + artwork.getId());
 
@@ -93,20 +94,23 @@ public class ArtworkCreateServlet extends HttpServlet {
             req.setAttribute("error", e.getMessage());
             req.setAttribute("title", title);
             req.setAttribute("description", description);
-            showForm(req, resp, tagService.parseIds(req.getParameterValues("tagIds")));
+            showForm(req, resp, tagService.parseIds(req.getParameterValues("tagIds")),
+                    req.getParameter("customTags"));
         } catch (Exception e) {
             req.setAttribute("error", "Ошибка загрузки файла: " + e.getMessage());
             req.setAttribute("title", title);
             req.setAttribute("description", description);
-            showForm(req, resp, tagService.parseIds(req.getParameterValues("tagIds")));
+            showForm(req, resp, tagService.parseIds(req.getParameterValues("tagIds")),
+                    req.getParameter("customTags"));
         }
     }
 
     private void showForm(HttpServletRequest req, HttpServletResponse resp,
-                          List<Long> selectedTagIds)
+                          List<Long> selectedTagIds, String customTags)
             throws ServletException, IOException {
         req.setAttribute("allTags", tagService.findAll());
         req.setAttribute("selectedTagIds", selectedTagIds);
+        req.setAttribute("customTags", customTags);
         req.getRequestDispatcher("/WEB-INF/jsp/artwork-create.jsp").forward(req, resp);
     }
 }

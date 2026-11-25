@@ -52,6 +52,7 @@ public class ArtworkEditServlet extends HttpServlet {
             req.setAttribute("artwork", art);
             req.setAttribute("allTags", tagService.findAll());
             req.setAttribute("selectedTagIds", tagService.findIdsByArtwork(artworkId));
+            req.setAttribute("customTags", null);
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-edit.jsp").forward(req, resp);
         } catch (RuntimeException e) {
             resp.sendError(403, e.getMessage());
@@ -78,7 +79,7 @@ public class ArtworkEditServlet extends HttpServlet {
 
         try {
             Artwork art = artworkService.updateArtwork(artworkId, title, description, currentUser);
-            tagService.save(artworkId, req.getParameterValues("tagIds"));
+            tagService.save(artworkId, req.getParameterValues("tagIds"), req.getParameter("customTags"));
             resp.sendRedirect(req.getContextPath() + "/artwork/" + art.getId());
         } catch (IllegalArgumentException e) {
             Artwork art = artworkService.getArtworkById(artworkId, currentUser);
@@ -90,6 +91,7 @@ public class ArtworkEditServlet extends HttpServlet {
             req.setAttribute("artwork", art);
             req.setAttribute("allTags", tagService.findAll());
             req.setAttribute("selectedTagIds", selected);
+            req.setAttribute("customTags", req.getParameter("customTags"));
             req.setAttribute("error", e.getMessage());
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-edit.jsp").forward(req, resp);
         } catch (RuntimeException e) {
