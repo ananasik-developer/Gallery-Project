@@ -11,6 +11,10 @@
             <p class="notice">Регистрация прошла успешно. Войдите под своим логином.</p>
         </c:if>
 
+        <c:if test="${param.blocked == '1'}">
+            <p class="notice error">Аккаунт заблокирован администратором.</p>
+        </c:if>
+
         <c:if test="${not empty error}">
             <p class="notice error"><c:out value="${error}"/></p>
         </c:if>
