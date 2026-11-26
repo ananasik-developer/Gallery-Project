@@ -100,6 +100,19 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public void setActive(long userId, boolean active) {
+        String sql = "UPDATE users SET is_active = ? WHERE id = ?";
+        try (Connection c = DbConfig.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setBoolean(1, active);
+            ps.setLong(2, userId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean existsByUsername(String username) {
         String sql = "SELECT 1 FROM users WHERE username = ?";
         try (Connection c = DbConfig.getConnection();

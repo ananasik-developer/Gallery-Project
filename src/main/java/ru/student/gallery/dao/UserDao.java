@@ -11,6 +11,7 @@ public interface UserDao {
     Optional<User> findByEmail(String email);
     void save(User user);
     void update(User user);
+    void setActive(long userId, boolean active);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     List<User> findAll();

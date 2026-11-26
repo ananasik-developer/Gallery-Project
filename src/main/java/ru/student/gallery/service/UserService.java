@@ -2,6 +2,7 @@ package ru.student.gallery.service;
 
 import ru.student.gallery.dao.UserDao;
 import ru.student.gallery.model.Role;
+import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.model.User;
 import ru.student.gallery.util.PasswordHasher;
 
@@ -103,5 +104,19 @@ public class UserService {
 
     public List<User> findAll() {
         return userDao.findAll();
+    }
+
+    public void setActive(long userId, boolean active, SessionUser admin) {
+        if (admin.getRole() != Role.ADMIN) {
+            throw new RuntimeException("Действие доступно только администратору");
+        }
+        if (admin.getId() == userId) {
+            throw new RuntimeException("Нельзя заблокировать самого себя");
+        }
+
+        userDao.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+
+        userDao.setActive(userId, active);
     }
 }

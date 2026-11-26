@@ -30,6 +30,9 @@
                         <span class="avatar"></span>
                     </c:otherwise>
                 </c:choose>
+                <c:if test="${currentUser.role == 'ADMIN'}">
+                    <a class="auth-link" href="<c:url value='/admin'/>">Админка</a>
+                </c:if>
                 <form class="logout-form" method="post" action="<c:url value='/logout'/>">
                     <input type="hidden" name="csrfToken" value="${csrfToken}">
                     <input type="hidden" name="formToken" value="${formToken}">

@@ -783,6 +783,28 @@ a {
     text-decoration: none;
 }
 
+.admin-table {
+    width: 100%;
+    max-width: 780px;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.admin-table th,
+.admin-table td {
+    text-align: left;
+    padding: 7px 10px;
+    border-bottom: 1px solid #e4dbbd;
+}
+
+.admin-table th {
+    font-weight: 600;
+}
+
+.admin-table .inline-form {
+    margin-bottom: 0;
+}
+
 .site-footer {
     padding: 16px;
     background: #efe0b7;
