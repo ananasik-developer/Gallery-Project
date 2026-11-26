@@ -16,10 +16,10 @@
             <input type="hidden" name="csrfToken" value="${csrfToken}">
             <input type="hidden" name="formToken" value="${formToken}">
             <label>Название
-                <input type="text" name="title" value="<c:out value='${title}'/>" required maxlength="500">
+                <input type="text" name="title" value="<c:out value='${title}'/>" required maxlength="128">
             </label>
             <label>Описание
-                <textarea name="description" rows="5"><c:out value="${description}"/></textarea>
+                <textarea name="description" rows="5" maxlength="2000"><c:out value="${description}"/></textarea>
             </label>
             <label>Изображение, JPG или PNG до 10 МБ
                 <input type="file" name="imageFile" accept="image/jpeg,image/png" required>

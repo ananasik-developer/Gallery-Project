@@ -7,7 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import ru.student.gallery.config.ServiceRegistry;
+import ru.student.gallery.exception.AccessDeniedException;
+import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.Artwork;
+import ru.student.gallery.model.Gallery;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.GalleryService;
@@ -31,64 +34,78 @@ public class GalleryAddArtworkServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        SessionUser currentUser = session != null ?
-                (SessionUser) session.getAttribute("currentUser") : null;
-
+        SessionUser currentUser = currentUser(req);
         if (currentUser == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        String galleryIdParam = req.getParameter("galleryId");
-
         long galleryId;
         try {
-            galleryId = Long.parseLong(galleryIdParam);
-        } catch (NumberFormatException | NullPointerException e) {
-            resp.sendError(404, "Некорректный ID галереи");
+            galleryId = Long.parseLong(req.getParameter("galleryId"));
+        } catch (NumberFormatException e) {
+            resp.sendError(400, "Некорректный ID галереи");
             return;
         }
 
+        Gallery gallery;
         try {
-            galleryService.findById(galleryId);
-        } catch (RuntimeException e) {
-            resp.sendError(403, "Нет доступа к этой галерее");
+            gallery = galleryService.findById(galleryId);
+        } catch (NotFoundException e) {
+            resp.sendError(404, e.getMessage());
             return;
         }
 
-        List<Artwork> userArtworks = artworkService.getPublishedByAuthor(currentUser.getId());
+        if (!gallery.getAuthorId().equals(currentUser.getId())) {
+            resp.sendError(403, "Добавлять работы можно только в свою галерею");
+            return;
+        }
 
-        req.setAttribute("galleryId", galleryId);
-        req.setAttribute("userArtworks", userArtworks);
-
-        req.getRequestDispatcher("/WEB-INF/jsp/gallery-add-artwork.jsp").forward(req, resp);
+        showForm(req, resp, galleryId, currentUser);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        SessionUser currentUser = session != null ?
-                (SessionUser) session.getAttribute("currentUser") : null;
-
+        SessionUser currentUser = currentUser(req);
         if (currentUser == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        long galleryId = Long.parseLong(req.getParameter("galleryId"));
-        long artworkId = Long.parseLong(req.getParameter("artworkId"));
+        long galleryId;
+        long artworkId;
+        try {
+            galleryId = Long.parseLong(req.getParameter("galleryId"));
+            artworkId = Long.parseLong(req.getParameter("artworkId"));
+        } catch (NumberFormatException e) {
+            resp.sendError(400, "Некорректные данные формы");
+            return;
+        }
 
         try {
             galleryService.addArtwork(galleryId, artworkId, currentUser);
             resp.sendRedirect(req.getContextPath() + "/gallery/" + galleryId);
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             req.setAttribute("error", e.getMessage());
-            List<Artwork> userArtworks = artworkService.getPublishedByAuthor(currentUser.getId());
-            req.setAttribute("galleryId", galleryId);
-            req.setAttribute("userArtworks", userArtworks);
-            req.getRequestDispatcher("/WEB-INF/jsp/gallery-add-artwork.jsp").forward(req, resp);
+            showForm(req, resp, galleryId, currentUser);
+        } catch (NotFoundException e) {
+            resp.sendError(404, e.getMessage());
+        } catch (AccessDeniedException e) {
+            resp.sendError(403, e.getMessage());
         }
+    }
+
+    private void showForm(HttpServletRequest req, HttpServletResponse resp, long galleryId, SessionUser currentUser)
+            throws ServletException, IOException {
+        List<Artwork> userArtworks = artworkService.getPublishedByAuthor(currentUser.getId());
+        req.setAttribute("galleryId", galleryId);
+        req.setAttribute("userArtworks", userArtworks);
+        req.getRequestDispatcher("/WEB-INF/jsp/gallery-add-artwork.jsp").forward(req, resp);
+    }
+
+    private SessionUser currentUser(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        return session == null ? null : (SessionUser) session.getAttribute("currentUser");
     }
 }

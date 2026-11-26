@@ -46,8 +46,8 @@ public class SubscriptionServlet extends HttpServlet {
 
         try {
             subscriptionService.toggle(currentUser.getId(), userId);
-        } catch (RuntimeException e) {
-            resp.sendError(403, e.getMessage());
+        } catch (IllegalArgumentException e) {
+            resp.sendError(400, e.getMessage());
             return;
         }
 

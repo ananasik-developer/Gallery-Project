@@ -1,6 +1,8 @@
 package ru.student.gallery.service;
 
 import ru.student.gallery.dao.UserDao;
+import ru.student.gallery.exception.AccessDeniedException;
+import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.Role;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.model.User;
@@ -99,7 +101,13 @@ public class UserService {
 
     public User findById(long id) {
         return userDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+    }
+
+    public boolean isActive(long userId) {
+        return userDao.findById(userId)
+                .map(User::isActive)
+                .orElse(false);
     }
 
     public List<User> findAll() {
@@ -108,14 +116,14 @@ public class UserService {
 
     public void setActive(long userId, boolean active, SessionUser admin) {
         if (admin.getRole() != Role.ADMIN) {
-            throw new RuntimeException("Действие доступно только администратору");
+            throw new AccessDeniedException("Действие доступно только администратору");
         }
         if (admin.getId() == userId) {
-            throw new RuntimeException("Нельзя заблокировать самого себя");
+            throw new IllegalArgumentException("Нельзя заблокировать самого себя");
         }
 
         userDao.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
         userDao.setActive(userId, active);
     }

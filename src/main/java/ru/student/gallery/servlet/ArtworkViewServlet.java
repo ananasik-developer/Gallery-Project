@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import ru.student.gallery.config.ServiceRegistry;
+import ru.student.gallery.exception.AccessDeniedException;
+import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
@@ -60,9 +62,9 @@ public class ArtworkViewServlet extends HttpServlet {
             req.setAttribute("liked", currentUser != null
                     && likeService.isLikedBy(currentUser.getId(), artworkId));
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-view.jsp").forward(req, resp);
-        } catch (IllegalArgumentException e) {
+        } catch (NotFoundException e) {
             resp.sendError(404, e.getMessage());
-        } catch (RuntimeException e) {
+        } catch (AccessDeniedException e) {
             resp.sendError(403, e.getMessage());
         }
     }

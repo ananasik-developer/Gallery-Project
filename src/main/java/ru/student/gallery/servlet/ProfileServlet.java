@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import ru.student.gallery.config.ServiceRegistry;
+import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.Gallery;
 import ru.student.gallery.model.SessionUser;
@@ -65,7 +66,7 @@ public class ProfileServlet extends HttpServlet {
         User profileUser;
         try {
             profileUser = userService.findById(userId);
-        } catch (IllegalArgumentException e) {
+        } catch (NotFoundException e) {
             resp.sendError(404, "Пользователь не найден");
             return;
         }

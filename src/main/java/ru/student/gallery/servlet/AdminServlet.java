@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import ru.student.gallery.config.ServiceRegistry;
+import ru.student.gallery.exception.AccessDeniedException;
+import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.Role;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.UserService;
@@ -58,11 +60,14 @@ public class AdminServlet extends HttpServlet {
 
         try {
             userService.setActive(userId, active, currentUser);
-        } catch (IllegalArgumentException e) {
+        } catch (NotFoundException e) {
             resp.sendError(404, e.getMessage());
             return;
-        } catch (RuntimeException e) {
+        } catch (AccessDeniedException e) {
             resp.sendError(403, e.getMessage());
+            return;
+        } catch (IllegalArgumentException e) {
+            resp.sendError(400, e.getMessage());
             return;
         }
 

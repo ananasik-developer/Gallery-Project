@@ -2,6 +2,8 @@ package ru.student.gallery.service;
 
 import ru.student.gallery.dao.ArtworkDao;
 import ru.student.gallery.dao.GalleryDao;
+import ru.student.gallery.exception.AccessDeniedException;
+import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.Gallery;
 import ru.student.gallery.model.SessionUser;
@@ -41,10 +43,10 @@ public class GalleryService {
 
     public void setPublication(long galleryId, boolean featured, boolean available, SessionUser owner) {
         Gallery gallery = galleryDao.findById(galleryId)
-                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
+                .orElseThrow(() -> new NotFoundException("Галерея не найдена"));
 
         if (!gallery.getAuthorId().equals(owner.getId())) {
-            throw new RuntimeException("Нет прав на изменение чужой галереи");
+            throw new AccessDeniedException("Нет прав на изменение чужой галереи");
         }
 
         galleryDao.setPublication(galleryId, featured, available);
@@ -67,25 +69,25 @@ public class GalleryService {
 
     public void addArtwork(long galleryId, long artworkId, SessionUser owner) {
         Gallery gallery = galleryDao.findById(galleryId)
-                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
+                .orElseThrow(() -> new NotFoundException("Галерея не найдена"));
 
         if (!gallery.getAuthorId().equals(owner.getId())) {
-            throw new RuntimeException("Нет прав на редактирование чужой галереи");
+            throw new AccessDeniedException("Нет прав на редактирование чужой галереи");
         }
 
         Artwork artwork = artworkDao.findById(artworkId)
-                .orElseThrow(() -> new IllegalArgumentException("Работа не найдена"));
+                .orElseThrow(() -> new NotFoundException("Работа не найдена"));
 
         if (!artwork.getAuthorId().equals(owner.getId())) {
-            throw new RuntimeException("В галерею можно добавлять только свои работы");
+            throw new AccessDeniedException("В галерею можно добавлять только свои работы");
         }
 
         if (!"PUBLISHED".equals(artwork.getStatus())) {
-            throw new RuntimeException("Сначала опубликуйте работу");
+            throw new IllegalArgumentException("Сначала опубликуйте работу");
         }
 
         if (galleryDao.containsArtwork(galleryId, artworkId)) {
-            throw new RuntimeException("Эта работа уже есть в галерее");
+            throw new IllegalArgumentException("Эта работа уже есть в галерее");
         }
 
         int order = galleryDao.getGalleryArtworks(galleryId).size();
@@ -94,15 +96,15 @@ public class GalleryService {
 
     public Gallery findById(long id) {
         return galleryDao.findById(id)
-                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
+                .orElseThrow(() -> new NotFoundException("Галерея не найдена"));
     }
 
     public void deleteGallery(long galleryId, SessionUser owner) {
         Gallery gallery = galleryDao.findById(galleryId)
-                .orElseThrow(() -> new RuntimeException("Галерея не найдена"));
+                .orElseThrow(() -> new NotFoundException("Галерея не найдена"));
 
         if (!gallery.getAuthorId().equals(owner.getId())) {
-            throw new RuntimeException("Нет прав на удаление чужой галереи");
+            throw new AccessDeniedException("Нет прав на удаление чужой галереи");
         }
 
         galleryDao.delete(galleryId);

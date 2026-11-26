@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import ru.student.gallery.config.ServiceRegistry;
+import ru.student.gallery.exception.AccessDeniedException;
+import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.GalleryService;
 
@@ -53,7 +55,9 @@ public class GalleryDeleteServlet extends HttpServlet {
         try {
             galleryService.deleteGallery(galleryId, currentUser);
             resp.sendRedirect(req.getContextPath() + "/profile");
-        } catch (RuntimeException e) {
+        } catch (NotFoundException e) {
+            resp.sendError(404, e.getMessage());
+        } catch (AccessDeniedException e) {
             resp.sendError(403, e.getMessage());
         }
     }

@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import ru.student.gallery.config.ServiceRegistry;
+import ru.student.gallery.exception.AccessDeniedException;
+import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
@@ -55,7 +57,9 @@ public class ArtworkEditServlet extends HttpServlet {
             req.setAttribute("customTags", null);
             req.setAttribute("customCategory", "GENERAL");
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-edit.jsp").forward(req, resp);
-        } catch (RuntimeException e) {
+        } catch (NotFoundException e) {
+            resp.sendError(404, e.getMessage());
+        } catch (AccessDeniedException e) {
             resp.sendError(403, e.getMessage());
         }
     }
@@ -97,7 +101,9 @@ public class ArtworkEditServlet extends HttpServlet {
             req.setAttribute("customCategory", tagService.normalizeCategory(req.getParameter("customCategory")));
             req.setAttribute("error", e.getMessage());
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-edit.jsp").forward(req, resp);
-        } catch (RuntimeException e) {
+        } catch (NotFoundException e) {
+            resp.sendError(404, e.getMessage());
+        } catch (AccessDeniedException e) {
             resp.sendError(403, e.getMessage());
         }
     }
