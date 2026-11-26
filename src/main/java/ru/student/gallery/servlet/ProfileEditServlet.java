@@ -12,11 +12,11 @@ import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.model.User;
 import ru.student.gallery.service.UserService;
+import ru.student.gallery.util.ImageUtil;
 import ru.student.gallery.util.Tokens;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 
 @WebServlet("/profile/edit")
 @MultipartConfig(
@@ -77,15 +77,7 @@ public class ProfileEditServlet extends HttpServlet {
         try {
             Part avatarPart = req.getPart("avatar");
             if (avatarPart != null && avatarPart.getSize() > 0) {
-                String contentType = avatarPart.getContentType();
-                if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
-                    throw new IllegalArgumentException("Аватар: только JPG или PNG");
-                }
-
-                String extension = "image/png".equals(contentType) ? ".png" : ".jpg";
-                String fileName = "avatar_" + user.getId() + "_" + System.currentTimeMillis() + extension;
-                String filePath = Paths.get(avatarDir, fileName).toString();
-                avatarPart.write(filePath);
+                String fileName = ImageUtil.save(avatarPart, avatarDir, "avatar_" + user.getId(), 400);
                 avatarPath = "/uploads/avatars/" + fileName;
             }
 

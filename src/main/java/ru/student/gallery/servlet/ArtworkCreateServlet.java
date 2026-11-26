@@ -9,11 +9,11 @@ import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.TagService;
+import ru.student.gallery.util.ImageUtil;
 import ru.student.gallery.util.Tokens;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -74,10 +74,7 @@ public class ArtworkCreateServlet extends HttpServlet {
                 throw new IllegalArgumentException("Выберите изображение");
             }
 
-            String fileName = LocalDate.now() + "_" + System.currentTimeMillis() + ".jpg";
-            String filePath = Paths.get(uploadDir, fileName).toString();
-
-            filePart.write(filePath);
+            String fileName = ImageUtil.save(filePart, uploadDir, LocalDate.now().toString(), 1600);
 
             Artwork artwork = new Artwork();
             artwork.setTitle(title);
