@@ -13,6 +13,7 @@ import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.model.User;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.GalleryService;
+import ru.student.gallery.service.SubscriptionService;
 import ru.student.gallery.service.UserService;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class ProfileServlet extends HttpServlet {
     private UserService userService;
     private ArtworkService artworkService;
     private GalleryService galleryService;
+    private SubscriptionService subscriptionService;
 
     @Override
     public void init() throws ServletException {
@@ -31,6 +33,7 @@ public class ProfileServlet extends HttpServlet {
         userService = registry.getService("userService", UserService.class);
         artworkService = registry.getService("artworkService", ArtworkService.class);
         galleryService = registry.getService("galleryService", GalleryService.class);
+        subscriptionService = registry.getService("subscriptionService", SubscriptionService.class);
     }
 
     @Override
@@ -78,6 +81,10 @@ public class ProfileServlet extends HttpServlet {
         req.setAttribute("published", published);
         req.setAttribute("drafts", drafts);
         req.setAttribute("galleries", galleries);
+        req.setAttribute("followers", subscriptionService.countFollowers(userId));
+        req.setAttribute("following", subscriptionService.countFollowing(userId));
+        req.setAttribute("subscribed", currentUser != null && !isOwner
+                && subscriptionService.isSubscribed(currentUser.getId(), userId));
 
         req.getRequestDispatcher("/WEB-INF/jsp/profile.jsp").forward(req, resp);
     }

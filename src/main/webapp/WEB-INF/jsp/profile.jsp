@@ -29,6 +29,19 @@
                     <p class="profile-tg"><c:out value="${profileUser.tgLink}"/></p>
                 </c:if>
 
+                <p class="profile-stats">
+                    Подписчиков: ${followers} · подписок: ${following}
+                </p>
+
+                <c:if test="${not isOwner && not empty currentUser}">
+                    <form class="inline-form" method="post" action="<c:url value='/subscribe'/>">
+                        <input type="hidden" name="csrfToken" value="${csrfToken}">
+                        <input type="hidden" name="formToken" value="${formToken}">
+                        <input type="hidden" name="userId" value="${profileUser.id}">
+                        <button type="submit">${subscribed ? 'Отписаться' : 'Подписаться'}</button>
+                    </form>
+                </c:if>
+
                 <c:if test="${isOwner}">
                     <p class="profile-actions">
                         <a class="cancel" href="<c:url value='/profile/edit'/>">Редактировать профиль</a>

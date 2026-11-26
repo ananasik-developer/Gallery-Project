@@ -400,6 +400,12 @@ a {
     color: #4a4232;
 }
 
+.profile-stats {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #4a4232;
+}
+
 .profile-actions {
     margin-top: 12px;
 }

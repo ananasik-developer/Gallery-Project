@@ -8,16 +8,19 @@ import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.dao.ArtworkDao;
 import ru.student.gallery.dao.GalleryDao;
 import ru.student.gallery.dao.LikeDao;
+import ru.student.gallery.dao.SubscriptionDao;
 import ru.student.gallery.dao.TagDao;
 import ru.student.gallery.dao.UserDao;
 import ru.student.gallery.dao.impl.JdbcArtworkDao;
 import ru.student.gallery.dao.impl.JdbcGalleryDao;
 import ru.student.gallery.dao.impl.JdbcLikeDao;
+import ru.student.gallery.dao.impl.JdbcSubscriptionDao;
 import ru.student.gallery.dao.impl.JdbcTagDao;
 import ru.student.gallery.dao.impl.JdbcUserDao;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.GalleryService;
 import ru.student.gallery.service.LikeService;
+import ru.student.gallery.service.SubscriptionService;
 import ru.student.gallery.service.TagService;
 import ru.student.gallery.service.UserService;
 
@@ -45,12 +48,16 @@ public class AppContextListener implements ServletContextListener {
         TagDao tagDao = new JdbcTagDao();
         TagService tagService = new TagService(tagDao);
 
+        SubscriptionDao subscriptionDao = new JdbcSubscriptionDao();
+        SubscriptionService subscriptionService = new SubscriptionService(subscriptionDao);
+
         ServiceRegistry registry = new ServiceRegistry();
         registry.register("userService", userService);
         registry.register("artworkService", artworkService);
         registry.register("galleryService", galleryService);
         registry.register("likeService", likeService);
         registry.register("tagService", tagService);
+        registry.register("subscriptionService", subscriptionService);
 
         ServletContext ctx = sce.getServletContext();
         ctx.setAttribute("serviceRegistry", registry);
