@@ -21,10 +21,15 @@ public class FormSecurityFilter implements Filter {
 
         if (uri.startsWith(context + "/css/")
                 || uri.startsWith(context + "/js/")
+                || uri.startsWith(context + "/img/")
+                || uri.startsWith(context + "/fonts/")
                 || uri.startsWith(context + "/uploads/")) {
             chain.doFilter(req, resp);
             return;
         }
+
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
 
         HttpSession session = request.getSession();
 

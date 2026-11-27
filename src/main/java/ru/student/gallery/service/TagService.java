@@ -28,6 +28,37 @@ public class TagService {
         return tagDao.findByArtwork(artworkId);
     }
 
+    public List<Tag> findGeneral() {
+        List<Tag> result = new ArrayList<>();
+        for (Tag tag : tagDao.findAll()) {
+            if ("GENERAL".equals(tag.getCategory())) {
+                result.add(tag);
+            }
+        }
+        return result;
+    }
+
+    public List<Tag> findNotGeneral(long artworkId) {
+        List<Tag> result = new ArrayList<>();
+        for (Tag tag : tagDao.findByArtwork(artworkId)) {
+            if (!"GENERAL".equals(tag.getCategory())) {
+                result.add(tag);
+            }
+        }
+        return result;
+    }
+
+    public String joinNames(List<Tag> tags) {
+        StringBuilder names = new StringBuilder();
+        for (Tag tag : tags) {
+            if (names.length() > 0) {
+                names.append(", ");
+            }
+            names.append(tag.getName());
+        }
+        return names.toString();
+    }
+
     public List<Long> findIdsByArtwork(long artworkId) {
         List<Long> ids = new ArrayList<>();
         for (Tag tag : tagDao.findByArtwork(artworkId)) {
@@ -112,6 +143,10 @@ public class TagService {
         List<Long> ids = parseIds(tagIds);
         List<String> names = parseNames(customTags);
         String category = normalizeCategory(customCategory);
+
+        if (names.size() > 3) {
+            throw new IllegalArgumentException("Своих тегов можно добавить не больше трёх");
+        }
 
         if (ids.size() + names.size() > MAX_TAGS) {
             throw new IllegalArgumentException("Можно выбрать не больше десяти тегов");

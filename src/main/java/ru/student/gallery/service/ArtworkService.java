@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ArtworkService {
 
+    private static final int MAX_DRAFTS = 3;
+
     private final ArtworkDao artworkDao;
 
     public ArtworkService(ArtworkDao artworkDao) {
@@ -32,6 +34,10 @@ public class ArtworkService {
     public void createArtwork(Artwork artwork, SessionUser author) {
         artwork.setAuthorId(author.getId());
         artwork.setStatus("DRAFT");
+
+        if (getDraftsByAuthor(author.getId()).size() >= MAX_DRAFTS) {
+            throw new IllegalArgumentException("Черновиков может быть не больше трёх");
+        }
 
         String title = artwork.getTitle() == null ? "" : artwork.getTitle().trim();
         if (title.isEmpty()) {
@@ -93,7 +99,7 @@ public class ArtworkService {
         if (query == null || query.length() < 2) {
             return List.of();
         }
-        return artworkDao.searchByTitle(query);
+        return artworkDao.search(query);
     }
 
     public Artwork updateArtwork(long artworkId, String title, String description, SessionUser currentUser) {
@@ -102,6 +108,10 @@ public class ArtworkService {
 
         if (!art.getAuthorId().equals(currentUser.getId())) {
             throw new AccessDeniedException("Нет прав на редактирование чужой работы");
+        }
+
+        if (!"DRAFT".equals(art.getStatus())) {
+            throw new AccessDeniedException("Опубликованную работу редактировать нельзя");
         }
 
         String newTitle = title == null ? "" : title.trim();

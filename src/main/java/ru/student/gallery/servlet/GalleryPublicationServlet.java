@@ -57,6 +57,9 @@ public class GalleryPublicationServlet extends HttpServlet {
         } catch (AccessDeniedException e) {
             resp.sendError(403, e.getMessage());
             return;
+        } catch (IllegalArgumentException e) {
+            resp.sendError(400, e.getMessage());
+            return;
         }
 
         String back = req.getParameter("back");

@@ -107,7 +107,7 @@ public class ArtworkCreateServlet extends HttpServlet {
     private void showForm(HttpServletRequest req, HttpServletResponse resp,
                           List<Long> selectedTagIds, String customTags, String customCategory)
             throws ServletException, IOException {
-        req.setAttribute("allTags", tagService.findAll());
+        req.setAttribute("generalTags", tagService.findGeneral());
         req.setAttribute("selectedTagIds", selectedTagIds);
         req.setAttribute("customTags", customTags);
         req.setAttribute("customCategory", customCategory);

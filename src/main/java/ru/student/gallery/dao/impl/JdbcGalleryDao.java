@@ -143,6 +143,9 @@ public class JdbcGalleryDao implements GalleryDao {
         String sql = "SELECT g.*, u.username as author_username FROM galleries g " +
                 "JOIN users u ON g.author_id = u.id " +
                 "WHERE g.available_for_commission = true " +
+                "AND EXISTS (SELECT 1 FROM gallery_artworks ga " +
+                "JOIN artworks a ON a.id = ga.artwork_id " +
+                "WHERE ga.gallery_id = g.id AND a.status = 'PUBLISHED') " +
                 "ORDER BY g.created_at DESC";
         List<Gallery> list = new ArrayList<>();
         try (Connection conn = DbConfig.getConnection();
@@ -174,6 +177,9 @@ public class JdbcGalleryDao implements GalleryDao {
         String sql = "SELECT g.*, u.username as author_username FROM galleries g " +
                 "JOIN users u ON g.author_id = u.id " +
                 "WHERE g.featured = true " +
+                "AND EXISTS (SELECT 1 FROM gallery_artworks ga " +
+                "JOIN artworks a ON a.id = ga.artwork_id " +
+                "WHERE ga.gallery_id = g.id AND a.status = 'PUBLISHED') " +
                 "ORDER BY g.created_at DESC";
         List<Gallery> list = new ArrayList<>();
         try (Connection conn = DbConfig.getConnection();
@@ -195,6 +201,9 @@ public class JdbcGalleryDao implements GalleryDao {
                 "LEFT JOIN gallery_artworks ga ON ga.gallery_id = g.id " +
                 "LEFT JOIN (SELECT artwork_id, COUNT(*) AS c FROM likes GROUP BY artwork_id) l " +
                 "ON l.artwork_id = ga.artwork_id " +
+                "WHERE EXISTS (SELECT 1 FROM gallery_artworks ga2 " +
+                "JOIN artworks a2 ON a2.id = ga2.artwork_id " +
+                "WHERE ga2.gallery_id = g.id AND a2.status = 'PUBLISHED') " +
                 "GROUP BY g.id, u.username " +
                 "ORDER BY like_count DESC, g.created_at DESC " +
                 "LIMIT ?";

@@ -11,6 +11,7 @@ import ru.student.gallery.model.Tag;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.GalleryService;
 import ru.student.gallery.service.TagService;
+import ru.student.gallery.util.Pager;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 @WebServlet("")
 public class HomeServlet extends HttpServlet {
 
-    private static final int PAGE_SIZE = 12;
+    private static final int PAGE_SIZE = 24;
     private static final int TAG_LIMIT = 60;
 
     private ArtworkService artworkService;
@@ -68,6 +69,7 @@ public class HomeServlet extends HttpServlet {
         req.setAttribute("feed", feed);
         req.setAttribute("page", page);
         req.setAttribute("pages", pages);
+        req.setAttribute("pageList", Pager.build(page, pages));
         req.setAttribute("featuredGalleries", galleryService.getFeaturedGalleries());
         req.setAttribute("popularGalleries", galleryService.getPopularGalleries(5));
 

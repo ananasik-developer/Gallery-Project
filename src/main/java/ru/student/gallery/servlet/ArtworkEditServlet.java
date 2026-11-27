@@ -11,6 +11,7 @@ import ru.student.gallery.exception.AccessDeniedException;
 import ru.student.gallery.exception.NotFoundException;
 import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
+import ru.student.gallery.model.Tag;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.TagService;
 
@@ -51,11 +52,17 @@ public class ArtworkEditServlet extends HttpServlet {
                 resp.sendError(403, "Редактировать можно только свои работы");
                 return;
             }
+            if (!"DRAFT".equals(art.getStatus())) {
+                resp.sendError(403, "Опубликованную работу редактировать нельзя");
+                return;
+            }
             req.setAttribute("artwork", art);
-            req.setAttribute("allTags", tagService.findAll());
+            req.setAttribute("generalTags", tagService.findGeneral());
             req.setAttribute("selectedTagIds", tagService.findIdsByArtwork(artworkId));
-            req.setAttribute("customTags", null);
-            req.setAttribute("customCategory", "GENERAL");
+
+            List<Tag> otherTags = tagService.findNotGeneral(artworkId);
+            req.setAttribute("customTags", tagService.joinNames(otherTags));
+            req.setAttribute("customCategory", otherTags.isEmpty() ? "META" : otherTags.get(0).getCategory());
             req.getRequestDispatcher("/WEB-INF/jsp/artwork-edit.jsp").forward(req, resp);
         } catch (NotFoundException e) {
             resp.sendError(404, e.getMessage());
@@ -95,7 +102,7 @@ public class ArtworkEditServlet extends HttpServlet {
             List<Long> selected = tagService.parseIds(req.getParameterValues("tagIds"));
 
             req.setAttribute("artwork", art);
-            req.setAttribute("allTags", tagService.findAll());
+            req.setAttribute("generalTags", tagService.findGeneral());
             req.setAttribute("selectedTagIds", selected);
             req.setAttribute("customTags", req.getParameter("customTags"));
             req.setAttribute("customCategory", tagService.normalizeCategory(req.getParameter("customCategory")));

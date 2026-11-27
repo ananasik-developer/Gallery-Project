@@ -11,6 +11,9 @@ import ru.student.gallery.model.SessionUser;
 import java.util.List;
 
 public class GalleryService {
+
+    private static final int MAX_GALLERIES = 6;
+
     private final GalleryDao galleryDao;
     private final ArtworkDao artworkDao;
 
@@ -23,6 +26,9 @@ public class GalleryService {
         gallery.setAuthorId(author.getId());
         if (gallery.getTitle() == null || gallery.getTitle().trim().isEmpty()) {
             throw new IllegalArgumentException("Название галереи обязательно");
+        }
+        if (galleryDao.findByAuthorId(author.getId()).size() >= MAX_GALLERIES) {
+            throw new IllegalArgumentException("Галерей может быть не больше шести");
         }
         galleryDao.save(gallery);
     }
@@ -49,6 +55,10 @@ public class GalleryService {
             throw new AccessDeniedException("Нет прав на изменение чужой галереи");
         }
 
+        if ((featured || available) && getGalleryArtworks(galleryId).isEmpty()) {
+            throw new IllegalArgumentException("В галерее нет опубликованных работ");
+        }
+
         galleryDao.setPublication(galleryId, featured, available);
     }
 
@@ -64,7 +74,7 @@ public class GalleryService {
     }
 
     public List<Gallery> getByAuthorId(long authorId) {
-        return galleryDao.findByAuthorId(authorId);
+        return fillArtworks(galleryDao.findByAuthorId(authorId));
     }
 
     public void addArtwork(long galleryId, long artworkId, SessionUser owner) {

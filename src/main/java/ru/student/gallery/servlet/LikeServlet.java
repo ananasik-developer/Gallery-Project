@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import ru.student.gallery.config.ServiceRegistry;
 import ru.student.gallery.exception.AccessDeniedException;
 import ru.student.gallery.exception.NotFoundException;
+import ru.student.gallery.model.Artwork;
 import ru.student.gallery.model.SessionUser;
 import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.LikeService;
@@ -54,7 +55,12 @@ public class LikeServlet extends HttpServlet {
         }
 
         try {
-            artworkService.getArtworkById(artworkId, currentUser);
+            Artwork artwork = artworkService.getArtworkById(artworkId, currentUser);
+            if (!"PUBLISHED".equals(artwork.getStatus())) {
+                resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                resp.getWriter().write("{\"error\":\"draft\"}");
+                return;
+            }
         } catch (NotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             resp.getWriter().write("{\"error\":\"notFound\"}");

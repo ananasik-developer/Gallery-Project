@@ -147,12 +147,25 @@ public class JdbcArtworkDao implements ArtworkDao {
     }
 
     @Override
-    public List<Artwork> searchByTitle(String query) {
-        String sql = "SELECT a.*, u.username as author_username FROM artworks a JOIN users u ON a.author_id = u.id WHERE a.title ILIKE ? AND a.status = 'PUBLISHED'";
+    public List<Artwork> search(String query) {
+        String sql = "SELECT a.*, u.username as author_username FROM artworks a " +
+                "JOIN users u ON a.author_id = u.id " +
+                "WHERE a.status = 'PUBLISHED' AND (" +
+                "a.title ILIKE ? OR a.description ILIKE ? OR u.username ILIKE ? OR " +
+                "EXISTS (SELECT 1 FROM artwork_tags at " +
+                "JOIN tags t ON t.id = at.tag_id " +
+                "WHERE at.artwork_id = a.id AND t.name ILIKE ?)) " +
+                "ORDER BY (a.title ILIKE ?) DESC, a.created_at DESC";
+
+        String pattern = "%" + query + "%";
         List<Artwork> list = new ArrayList<>();
         try (Connection conn = DbConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, "%" + query + "%");
+            ps.setString(1, pattern);
+            ps.setString(2, pattern);
+            ps.setString(3, pattern);
+            ps.setString(4, pattern);
+            ps.setString(5, pattern);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) list.add(mapRow(rs));
             }

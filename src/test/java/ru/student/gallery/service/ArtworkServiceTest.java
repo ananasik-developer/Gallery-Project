@@ -73,6 +73,14 @@ class ArtworkServiceTest {
     }
 
     @Test
+    void publishedArtworkCannotBeEdited() {
+        Artwork artwork = givenArtwork("Красный шарф", 1, "PUBLISHED");
+
+        assertThrows(AccessDeniedException.class,
+                () -> artworkService.updateArtwork(artwork.getId(), "Новое имя", "Описание", owner));
+    }
+
+    @Test
     void deletingForeignArtworkIsDenied() {
         Artwork artwork = givenArtwork("Красота 1", 1, "PUBLISHED");
 

@@ -87,7 +87,7 @@ public class FakeArtworkDao implements ArtworkDao {
     }
 
     @Override
-    public List<Artwork> searchByTitle(String query) {
+    public List<Artwork> search(String query) {
         List<Artwork> result = new ArrayList<>();
         for (Artwork artwork : artworks) {
             if ("PUBLISHED".equals(artwork.getStatus())

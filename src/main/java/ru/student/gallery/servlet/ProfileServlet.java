@@ -16,12 +16,15 @@ import ru.student.gallery.service.ArtworkService;
 import ru.student.gallery.service.GalleryService;
 import ru.student.gallery.service.SubscriptionService;
 import ru.student.gallery.service.UserService;
+import ru.student.gallery.util.Pager;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/profile/*")
 public class ProfileServlet extends HttpServlet {
+
+    private static final int PAGE_SIZE = 12;
 
     private UserService userService;
     private ArtworkService artworkService;
@@ -73,13 +76,22 @@ public class ProfileServlet extends HttpServlet {
 
         boolean isOwner = currentUser != null && profileUser.getId().equals(currentUser.getId());
 
-        List<Artwork> published = artworkService.getPublishedByAuthor(userId);
+        List<Artwork> allPublished = artworkService.getPublishedByAuthor(userId);
+        int pages = Math.max(1, (allPublished.size() + PAGE_SIZE - 1) / PAGE_SIZE);
+        int page = parsePage(req.getParameter("page"), pages);
+        int from = Math.min((page - 1) * PAGE_SIZE, allPublished.size());
+        int to = Math.min(from + PAGE_SIZE, allPublished.size());
+        List<Artwork> published = allPublished.subList(from, to);
+
         List<Artwork> drafts = isOwner ? artworkService.getDraftsByAuthor(userId) : List.of();
         List<Gallery> galleries = galleryService.getByAuthorId(userId);
 
         req.setAttribute("profileUser", profileUser);
         req.setAttribute("isOwner", isOwner);
         req.setAttribute("published", published);
+        req.setAttribute("page", page);
+        req.setAttribute("pages", pages);
+        req.setAttribute("pageList", Pager.build(page, pages));
         req.setAttribute("drafts", drafts);
         req.setAttribute("galleries", galleries);
         req.setAttribute("followers", subscriptionService.countFollowers(userId));
@@ -88,5 +100,20 @@ public class ProfileServlet extends HttpServlet {
                 && subscriptionService.isSubscribed(currentUser.getId(), userId));
 
         req.getRequestDispatcher("/WEB-INF/jsp/profile.jsp").forward(req, resp);
+    }
+
+    private int parsePage(String value, int pages) {
+        if (value == null) {
+            return 1;
+        }
+        try {
+            int page = Integer.parseInt(value);
+            if (page < 1) {
+                return 1;
+            }
+            return Math.min(page, pages);
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 }

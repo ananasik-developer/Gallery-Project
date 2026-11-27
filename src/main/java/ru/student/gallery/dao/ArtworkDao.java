@@ -13,5 +13,5 @@ public interface ArtworkDao {
     List<Artwork> findPublishedByTag(long tagId, int limit);
     void update(Artwork artwork);
     void delete(long id);
-    List<Artwork> searchByTitle(String query);
+    List<Artwork> search(String query);
 }
