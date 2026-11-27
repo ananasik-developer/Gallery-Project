@@ -5,6 +5,8 @@
 
 <div class="page">
     <main class="content">
+        <button type="button" class="back-button">Назад</button>
+
         <h1>Пользователи</h1>
         <p class="subtitle">Заблокированный пользователь не сможет войти в аккаунт.</p>
 

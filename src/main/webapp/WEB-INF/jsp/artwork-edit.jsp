@@ -5,50 +5,52 @@
 
 <div class="page">
     <main class="content">
-        <h1>Редактирование работы</h1>
-        <p class="subtitle">Меняются название и описание, изображение остаётся прежним.</p>
+        <div class="form-box">
+            <h1>Редактирование работы</h1>
 
-        <c:if test="${not empty error}">
-            <p class="notice error"><c:out value="${error}"/></p>
-        </c:if>
+            <c:if test="${not empty error}">
+                <p class="notice error"><c:out value="${error}"/></p>
+            </c:if>
 
-        <form class="form" method="post" action="<c:url value='/artwork/edit/${artwork.id}'/>">
-            <input type="hidden" name="csrfToken" value="${csrfToken}">
-            <input type="hidden" name="formToken" value="${formToken}">
-            <label>Название
-                <input type="text" name="title" value="<c:out value='${artwork.title}'/>" required maxlength="128">
-            </label>
-            <label>Описание
-                <textarea name="description" rows="5" maxlength="2000"><c:out value="${artwork.description}"/></textarea>
-            </label>
+            <form class="form" method="post" action="<c:url value='/artwork/edit/${artwork.id}'/>">
+                <input type="hidden" name="csrfToken" value="${csrfToken}">
+                <input type="hidden" name="formToken" value="${formToken}">
+                <label>Название
+                    <input type="text" name="title" value="<c:out value='${artwork.title}'/>" required maxlength="128">
+                </label>
+                <label>Описание
+                    <textarea name="description" rows="5" maxlength="2000"><c:out value="${artwork.description}"/></textarea>
+                </label>
 
-            <div class="tag-picker">
-                <span class="tag-picker-label">Теги, не больше десяти</span>
-                <c:forEach var="t" items="${allTags}">
-                    <label class="tag-check">
-                        <input type="checkbox" name="tagIds" value="${t.id}" ${selectedTagIds.contains(t.id) ? 'checked' : ''}>
-                        <c:out value="${t.name}"/>
+                <div class="tag-picker">
+                    <span class="tag-picker-label">Основные теги</span>
+                    <div class="tag-choices">
+                        <c:forEach var="t" items="${generalTags}">
+                            <label class="tag-check">
+                                <input type="checkbox" name="tagIds" value="${t.id}" ${selectedTagIds.contains(t.id) ? 'checked' : ''}>
+                                <c:out value="${t.name}"/>
+                            </label>
+                        </c:forEach>
+                    </div>
+
+                    <label class="tag-custom">
+                        Свои теги через запятую, не больше трёх
+                        <input type="text" name="customTags" value="<c:out value='${customTags}'/>" maxlength="200" placeholder="autumn, sketch">
                     </label>
-                </c:forEach>
 
-                <label class="tag-custom">
-                    Свои теги через запятую
-                    <input type="text" name="customTags" value="<c:out value='${customTags}'/>" maxlength="200" placeholder="autumn, sketch">
-                </label>
+                    <label class="tag-custom">
+                        Группа для новых тегов
+                        <select name="customCategory">
+                            <option value="META" ${customCategory == 'META' ? 'selected' : ''}>Стиль</option>
+                            <option value="CHARACTER" ${customCategory == 'CHARACTER' ? 'selected' : ''}>Персонажи</option>
+                        </select>
+                    </label>
+                </div>
 
-                <label class="tag-custom">
-                    Группа для новых тегов
-                    <select name="customCategory">
-                        <option value="GENERAL" ${customCategory == 'GENERAL' ? 'selected' : ''}>General</option>
-                        <option value="META" ${customCategory == 'META' ? 'selected' : ''}>Meta</option>
-                        <option value="CHARACTER" ${customCategory == 'CHARACTER' ? 'selected' : ''}>Characters</option>
-                    </select>
-                </label>
-            </div>
-
-            <button type="submit">Сохранить</button>
-            <a class="cancel" href="<c:url value='/artwork/${artwork.id}'/>">Отмена</a>
-        </form>
+                <button type="submit">Сохранить</button>
+                <a class="cancel" href="<c:url value='/artwork/${artwork.id}'/>">Отмена</a>
+            </form>
+        </div>
     </main>
 </div>
 

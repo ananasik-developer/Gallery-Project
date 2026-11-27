@@ -5,11 +5,11 @@
 
 <div class="page">
     <aside class="sidebar">
-        <h2>Tags</h2>
+        <h2>Теги</h2>
 
         <c:if test="${not empty tagGroups['GENERAL']}">
             <div class="tag-group">
-                <h3>General</h3>
+                <h3>Общее</h3>
                 <c:forEach var="t" items="${tagGroups['GENERAL']}">
                     <a class="tag-link ${activeTagId == t.id ? 'active' : ''}" href="<c:url value='/?tag=${t.id}'/>">
                         <span class="tag-dot"></span><c:out value="${t.name}"/>
@@ -23,7 +23,7 @@
 
         <c:if test="${not empty tagGroups['META']}">
             <div class="tag-group">
-                <h3>Meta</h3>
+                <h3>Стиль</h3>
                 <c:forEach var="t" items="${tagGroups['META']}">
                     <a class="tag-link ${activeTagId == t.id ? 'active' : ''}" href="<c:url value='/?tag=${t.id}'/>">
                         <span class="tag-dot"></span><c:out value="${t.name}"/>
@@ -37,7 +37,7 @@
 
         <c:if test="${not empty tagGroups['CHARACTER']}">
             <div class="tag-group">
-                <h3>Characters</h3>
+                <h3>Персонажи</h3>
                 <c:forEach var="t" items="${tagGroups['CHARACTER']}">
                     <a class="tag-link ${activeTagId == t.id ? 'active' : ''}" href="<c:url value='/?tag=${t.id}'/>">
                         <span class="tag-dot"></span><c:out value="${t.name}"/>
@@ -73,18 +73,19 @@
                         </a>
                     </c:forEach>
                 </div>
-                <button class="strip-prev" type="button" aria-label="Назад">&#8249;</button>
-                <button class="strip-next" type="button" aria-label="Вперёд">&#8250;</button>
+                <button class="strip-prev" type="button" aria-label="Назад">
+                    <img src="<c:url value='/img/chevron-left.svg'/>" alt="">
+                </button>
+                <button class="strip-next" type="button" aria-label="Вперёд">
+                    <img src="<c:url value='/img/chevron-right.svg'/>" alt="">
+                </button>
             </section>
         </c:if>
 
         <form class="search" method="get" action="<c:url value='/'/>">
             <div class="search-box">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2">
-                    <circle cx="10" cy="10" r="7"/>
-                    <line x1="15" y1="15" x2="21" y2="21"/>
-                </svg>
-                <input type="text" name="q" value="<c:out value='${param.q}'/>" placeholder="поиск">
+                <img class="search-icon" src="<c:url value='/img/search.svg'/>" alt="">
+                <input type="text" name="q" value="<c:out value='${param.q}'/>" placeholder="название, тег или автор">
             </div>
             <button type="submit">поиск</button>
         </form>
@@ -115,11 +116,25 @@
         <c:if test="${empty searchQuery && empty activeTagId && pages > 1}">
             <div class="pager">
                 <c:if test="${page > 1}">
-                    <a href="<c:url value='/?page=${page - 1}'/>">Назад</a>
+                    <a class="pager-step" href="<c:url value='/?page=${page - 1}'/>">Назад</a>
                 </c:if>
-                <span class="pager-current">Страница ${page} из ${pages}</span>
+
+                <c:forEach var="number" items="${pageList}">
+                    <c:choose>
+                        <c:when test="${empty number}">
+                            <span class="pager-gap">…</span>
+                        </c:when>
+                        <c:when test="${number == page}">
+                            <span class="pager-item active">${number}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="pager-item" href="<c:url value='/?page=${number}'/>">${number}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+
                 <c:if test="${page < pages}">
-                    <a href="<c:url value='/?page=${page + 1}'/>">Вперёд</a>
+                    <a class="pager-step" href="<c:url value='/?page=${page + 1}'/>">Вперёд</a>
                 </c:if>
             </div>
         </c:if>

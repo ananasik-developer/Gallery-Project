@@ -9,7 +9,10 @@
 </head>
 <body>
 <header class="site-header">
-    <a class="logo" href="<c:url value='/'/>"></a>
+    <a class="brand" href="<c:url value='/'/>" title="На главную">
+        <span class="logo"><img src="<c:url value='/img/palette.svg'/>" alt=""></span>
+        <span class="brand-name">BoArt</span>
+    </a>
     <nav class="main-nav">
         <a href="<c:url value='/'/>">Главная</a>
         <a href="<c:url value='/artists'/>">Поиск исполнителя</a>
@@ -21,7 +24,6 @@
                 <a class="action-link" href="<c:url value='/artwork/create'/>">Новая работа</a>
                 <a class="action-link" href="<c:url value='/gallery/create'/>">Новая галерея</a>
                 <a class="nickname" href="<c:url value='/profile'/>"><c:out value="${currentUser.username}"/></a>
-                <span class="user-id">id: ${currentUser.id}</span>
                 <c:choose>
                     <c:when test="${not empty currentUser.avatarPath}">
                         <img class="avatar" src="<c:url value='${currentUser.avatarPath}'/>" alt="">
