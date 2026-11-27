@@ -42,4 +42,5 @@ build/
 uploads/
 db.properties
 db.properties.local
+!src/test/resources/db.properties
 .DB_Store

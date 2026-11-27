@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,13 +72,19 @@ public class JdbcUserDao implements UserDao {
         String sql = "INSERT INTO users (username, email, password_hash, role, is_active) " +
                 "VALUES (?, ?, ?, ?, ?)";
         try (Connection c = DbConfig.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+             PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPasswordHash());
             ps.setString(4, user.getRole() == null ? Role.USER.name() : user.getRole().name());
             ps.setBoolean(5, user.isActive());
             ps.executeUpdate();
+
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    user.setId(keys.getLong(1));
+                }
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
