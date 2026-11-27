@@ -39,7 +39,6 @@ build/
 ### Mac OS ###
 .DS_Store
 
-uploads/
 db.properties
 db.properties.local
 !src/test/resources/db.properties
